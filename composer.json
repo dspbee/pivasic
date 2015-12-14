@@ -1,6 +1,7 @@
 {
   "name": "dspbee/pivasic",
   "description": "The PHP framework",
+  "version": "0.1.0",
   "type": "library",
   "keywords": [
     "simple",
