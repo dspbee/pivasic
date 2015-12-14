@@ -1,0 +1,40 @@
+{
+  "name": "dspbee/pivasic",
+  "description": "The PHP framework",
+  "type": "library",
+  "keywords": [
+    "simple",
+    "fast",
+    "lightweight",
+    "micro",
+    "framework"
+  ],
+  "homepage": "https://pivasic.com/",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Igor Sorokin",
+      "email": "dspbee@pivasic.com",
+      "role": "developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/dspbee/pivasic/issues"
+  },
+  "require": {
+    "php": ">=5.6"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~5.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Dspbee\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Dspbee\\Test\\": "test/UnitTest/"
+    }
+  }
+}
