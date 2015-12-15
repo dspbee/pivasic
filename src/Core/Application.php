@@ -5,36 +5,46 @@
  */
 namespace Dspbee\Core;
 
+use Dspbee\Bundle\Template\Native;
+
 /**
  * Class Application
  * @package Dspbee\Core
  */
 class Application
 {
-    public function __construct($root)
-    {
-        $this->root = $root;
-        $this->bootstrap();
-    }
-
     /**
      * Process request.
      *
+     * @param string $packageRoot
      * @param array $languageList
      * @param array $packageList
      * @param null $url
      *
      * @return Response
      */
-    public function run($languageList = [], $packageList = [], $url = null)
+    public function run($packageRoot, $languageList = [], $packageList = [], $url = null)
     {
         $request = new Request($languageList, $packageList, $url);
+        $packageRoot .= $request->package() . '/';
+
+        /**
+         * Register autoload.
+         */
+        spl_autoload_register(function ($path) use ($packageRoot) {
+            $path = explode('\\', $path);
+            array_shift($path);
+            $path = $packageRoot . 'src/' . implode('/', $path) . '.php';
+            if (file_exists($path)) {
+                require_once $path;
+            }
+        });
 
         if (null !== $request->packageRoute()) {
             /**
              * Custom routing.
              */
-            $path = $this->root . $request->package() . '/' . $request->packageRoute()  . '.php';
+            $path = $packageRoot . $request->packageRoute()  . '.php';
             if (file_exists($path)) {
                 require_once $path;
                 $route = $request->package() . 'Package\\' . $request->packageRoute();
@@ -42,7 +52,9 @@ class Application
                  * @var IRoute $route
                  */
                 $route = new $route($request);
-                return $route->getProcess()->process($request);
+                if (null !== $route->getProcess()) {
+                    return $route->getProcess()->process();
+                }
             }
         } else {
             /**
@@ -55,15 +67,15 @@ class Application
                 $handler = str_replace('.', '', $_GET['handler']);
             }
 
-            $path = $this->root . $request->package() . '/route/' . $request->route() . '/#' . $request->method() . '/' . $handler . '.php';
+            $path = $packageRoot . 'route/' . $request->route() . '/#' . $request->method() . '/' . $handler . '.php';
             if (file_exists($path)) {
                 require_once $path;
                 $handler = $request->package() . 'Package\\' . $request->route() . '\\' . $request->method() . '\\' . $handler;
                 /**
                  * @var IProcess $handler
                  */
-                $handler = new $handler;
-                return $handler->process($request);
+                $handler = new $handler($packageRoot, $request);
+                return $handler->process();
             }
         }
 
@@ -73,36 +85,14 @@ class Application
         $response = new Response();
         $response->headerStatus(404);
 
-        $content = '404 Not Found';
-        $path = $this->root . $request->package() . '/view/404.html.php';
-        if (file_exists($path)) {
-            ob_start();
-            require $path;
-            $content = ob_get_clean();
+        $template = new Native($packageRoot);
+        $content = $template->getContent('404.html.php');
+        if (null === $content) {
+            $content = '404 Not Found';
         }
+
         $response->setContent($content);
 
         return $response;
     }
-
-
-    private function bootstrap()
-    {
-        /**
-         * Autoload from app/class directory.
-         */
-        $root = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
-        spl_autoload_register(function ($path) use ($root) {
-            $path = explode('\\', $path);
-            if (1 < count($path)) {
-                unset($path[0]);
-            }
-            $path = $root . implode(DIRECTORY_SEPARATOR, $path) . '.php';
-            if (file_exists($path)) {
-                require_once $path;
-            }
-        });
-    }
-
-    private $root;
 }

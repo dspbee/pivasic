@@ -12,11 +12,15 @@ namespace Dspbee\Core;
 interface IProcess
 {
     /**
-     * Handle request.
-     *
+     * @param string $packageRoot
      * @param Request $request
+     */
+    public function __construct($packageRoot, Request $request);
+
+    /**
+     * Handle request.
      *
      * @return Response
      */
-    public function process(Request $request);
+    public function process();
 }

@@ -39,6 +39,8 @@ class Response
     }
 
     /**
+     * Set response body.
+     *
      * @param string $content
      */
     public function setContent($content)
@@ -47,6 +49,8 @@ class Response
     }
 
     /**
+     * Get response body.
+     *
      * @return string
      */
     public function getContent()
@@ -59,6 +63,7 @@ class Response
      *
      * @param string $name
      * @param string $value
+     *
      * @return bool
      */
     public function header($name, $value)
@@ -67,7 +72,6 @@ class Response
             header($name . ': ' . $value);
             return true;
         }
-
         return false;
     }
 
@@ -93,6 +97,7 @@ class Response
      * @param integer $statusCode  - status
      * @param string $version      - HTTP version
      * @param null $statusText     - status text
+     *
      * @return bool
      */
     public function headerStatus($statusCode, $version = '1.1', $statusText = null)
@@ -181,7 +186,7 @@ class Response
     function redirect($url = null, $statusCode = 302)
     {
         if (null === $url && isset($_SERVER['REQUEST_URI'])) {
-            $url = '/' . ltrim($_SERVER['REQUEST_URI'], '/');
+            $url = '/' . trim($_SERVER['REQUEST_URI'], '/');
         }
 
         if (headers_sent()) {
