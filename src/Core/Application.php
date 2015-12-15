@@ -53,7 +53,10 @@ class Application
                  */
                 $route = new $route($request);
                 if (null !== $route->getProcess()) {
-                    return $route->getProcess()->process();
+                    $process = $route->getProcess()->process();
+                    if (null !== $process) {
+                        return $process;
+                    }
                 }
             }
         } else {
@@ -62,9 +65,9 @@ class Application
              */
             $handler = 'Index';
             if (isset($_POST['handler'])) {
-                $handler = str_replace('.', '', $_POST['handler']);
+                $handler = str_replace('.', '', ucfirst($_POST['handler']));
             } elseif (isset($_GET['handler'])) {
-                $handler = str_replace('.', '', $_GET['handler']);
+                $handler = str_replace('.', '', ucfirst($_GET['handler']));
             }
 
             $path = $packageRoot . 'route/' . $request->route() . '/#' . $request->method() . '/' . $handler . '.php';
@@ -75,7 +78,10 @@ class Application
                  * @var IProcess $handler
                  */
                 $handler = new $handler($packageRoot, $request);
-                return $handler->process();
+                $process = $handler->process();
+                if (null !== $process) {
+                    return $process;
+                }
             }
         }
 
