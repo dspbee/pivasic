@@ -29,7 +29,7 @@ class Native
      */
     public function getContent($name, array $data = [])
     {
-        $path = $this->packageRoot . '/view/cache/' . $name;
+        $path = $this->packageRoot . 'view/cache/' . $name;
         if (!file_exists($path)) {
             $code = $this->compile($name, true, true);
             if (empty($code)) {
@@ -47,19 +47,20 @@ class Native
         $fh = fopen($path, 'rb');
         flock($fh, LOCK_SH);
 
-        ob_start();
-        extract($data);
-        require $path;
+        $html = self::renderTemplate($path, $data);
 
         flock($fh, LOCK_UN);
         fclose($fh);
 
-        return ob_get_clean();
+        return $html;
     }
 
+    /**
+     * Delete all cached templates.
+     */
     public function clearCache()
     {
-
+        $this->removeDir($this->packageRoot . 'view/cache');
     }
 
     /**
@@ -74,7 +75,7 @@ class Native
     private function compile($name, $processInclude, $processExtends)
     {
         $code = null;
-        $path = $this->packageRoot . '/view/' . $name;
+        $path = $this->packageRoot . 'view/' . $name;
 
         if (file_exists($path)) {
             ob_start();
@@ -109,5 +110,50 @@ class Native
         return $code;
     }
 
+    /**
+     * Safe include. Used for scope isolation.
+     *
+     * @param string $file  File to include
+     * @param array  $data  Data passed to template
+     *
+     * @return string
+     */
+    private static function renderTemplate($file, array $data)
+    {
+        ob_start();
+        extract($data);
+        include $file;
+        return ob_get_clean();
+    }
+
+    /**
+     * Deleting all subdirectories and files.
+     *
+     * @param string $dir   Path to the directory
+     * @param bool   $self  If true then delete root directory
+     */
+    private function removeDir($dir, $self = false)
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ('.' != $object && '..' != $object) {
+                    if ('dir' == filetype($dir . '/' .$object)) {
+                        $this->removeDir($dir . '/' . $object, true);
+                    } else {
+                        unlink($dir . '/' . $object);
+                    }
+                }
+            }
+            if ($self) {
+                reset($objects);
+                if (count(scandir($dir)) == 2) {
+                    rmdir($dir);
+                }
+            }
+        }
+    }
+
     private $packageRoot;
 }
+
