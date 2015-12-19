@@ -23,5 +23,5 @@ interface IRoute
      *
      * @return IProcess.
      */
-    public function getProcess(): IProcess;
+    public function getProcess();
 }
