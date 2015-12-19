@@ -21,7 +21,7 @@ interface IRoute
     /**
      * Get object of IProcess to handle the request.
      *
-     * @return IProcess.
+     * @return IProcess|null.
      */
     public function getProcess();
 }
