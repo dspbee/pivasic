@@ -16,8 +16,9 @@ use Dspbee\Core\Request;
 class Native
 {
     /**
-     * @param string $packageRoot
+     * @param $packageRoot
      * @param Request|null $request
+     * @param bool $dev
      */
     public function __construct($packageRoot, Request $request = null, $dev = true)
     {
