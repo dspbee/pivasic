@@ -16,15 +16,24 @@ use Dspbee\Bundle\Common\File\FileBag;
 use Dspbee\Bundle\Common\Session\Session;
 
 /**
+ * Represents a HTTP request.
+ *
  * Class Request
  * @package Dspbee\Core
  */
 class Request
 {
-    public function __construct($languageList = [], $packageList = [], $url = null)
+    /**
+     * Request constructor.
+     *
+     * @param array $languageList
+     * @param array $packageList
+     * @param null $url
+     */
+    public function __construct(array $languageList = [], array $packageList = [], $url = null)
     {
         if (null === $url) {
-            $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+            $url = $_SERVER['REQUEST_URI'] ?? '';
         }
 
         $this->method = 'GET';
@@ -116,20 +125,35 @@ class Request
      */
     public function makeUrl($route = '', $domain = false)
     {
-        if ($this->languageCode != $this->languageDefault) {
-            $url = trim('/' . $this->languageCode . '/' . lcfirst($this->package) . '/' . $route, '/');
+        $route = trim($route, '/');
+        if ('Original' == $this->package) {
+            if ($this->languageCode != $this->languageDefault) {
+                $url = trim('/' . $this->languageCode . '/' . $route, '/');
+            } else {
+                $url = trim('/' . $route, '/');
+            }
         } else {
-            $url = trim('/' . lcfirst($this->package) . '/' . $route, '/');
+            if ($this->languageCode != $this->languageDefault) {
+                $url = trim('/' . $this->languageCode . '/' . lcfirst($this->package) . '/' . $route, '/');
+            } else {
+                $url = trim('/' . lcfirst($this->package) . '/' . $route, '/');
+            }
         }
         if ($domain) {
+            $host = '';
             if (isset($_SERVER['HTTP_HOST'])) {
                 $host = $_SERVER['HTTP_HOST'];
-            } else {
-                if (isset($_SERVER['SERVER_NAME'])) {
-                    $host = $_SERVER['SERVER_NAME'];
-                }
+            } else if (isset($_SERVER['SERVER_NAME'])) {
+                $host = $_SERVER['SERVER_NAME'];
             }
-            $url = 'http://' . $host . '/' . $url;
+            if (
+                (isset($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS']) ||
+                (isset($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])
+            ) {
+                $url = 'https://' . $host . '/' . $url;
+            } else {
+                $url = 'http://' . $host . '/' . $url;
+            }
         } else {
             $url = '/' . $url;
         }
@@ -148,6 +172,8 @@ class Request
     }
 
     /**
+     * A default language code.
+     *
      * @return string
      */
     public function languageDefault()
@@ -176,7 +202,7 @@ class Request
     }
 
     /**
-     * Name of app package.
+     * Name of an app package.
      *
      * @return string
      */
@@ -186,9 +212,9 @@ class Request
     }
 
     /**
-     * Custom routing class.
+     * Custom routing class or false.
      *
-     * @return string|int
+     * @return string|bool
      */
     public function packageRoute()
     {
@@ -210,7 +236,7 @@ class Request
      *
      * @return GetBag|null
      */
-    public function get()
+    public function get(): GetBag
     {
         if (null === $this->get) {
             $this->get = new GetBag();
@@ -223,7 +249,7 @@ class Request
      *
      * @return PostBag|null
      */
-    public function post()
+    public function post(): PostBag
     {
         if (null === $this->post) {
             $this->post = new PostBag();
@@ -236,7 +262,7 @@ class Request
      *
      * @return CookieBag|null
      */
-    public function cookie()
+    public function cookie(): CookieBag
     {
         if (null === $this->cookie) {
             $this->cookie = new CookieBag();
@@ -249,7 +275,7 @@ class Request
      *
      * @return ServerBag|null
      */
-    public function server()
+    public function server(): ServerBag
     {
         if (null === $this->server) {
             $this->server = new ServerBag();
@@ -262,7 +288,7 @@ class Request
      *
      * @return EnvBag|null
      */
-    public function env()
+    public function env(): EnvBag
     {
         if (null === $this->env) {
             $this->env = new EnvBag();
@@ -275,7 +301,7 @@ class Request
      *
      * @return Session|null
      */
-    public function session()
+    public function session(): Session
     {
         if (null == $this->session) {
             $this->session = new Session();
@@ -288,7 +314,7 @@ class Request
      *
      * @return FileBag|null
      */
-    public function file()
+    public function file(): FileBag
     {
         if (null === $this->file) {
             $this->file = new FileBag();
@@ -301,7 +327,7 @@ class Request
      *
      * @return HeaderBag|null
      */
-    public function header()
+    public function header(): HeaderBag
     {
         if (null === $this->header) {
             $this->header = new HeaderBag();
@@ -316,7 +342,7 @@ class Request
      *
      * @see http://php.net/manual/ru/wrappers.php.php#wrappers.php.input
      */
-    public function data()
+    public function data(): ValueBag
     {
         if (null === $this->data) {
             parse_str(file_get_contents('php://input'), $temp);

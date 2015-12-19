@@ -52,7 +52,7 @@ class GetBag extends ValueBag
      */
     public function fetch($key, $default = null)
     {
-        return isset($_GET[$key]) ? $_GET[$key] : $default;
+        return $_GET[$key] ?? $default;
     }
 
     /**

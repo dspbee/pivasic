@@ -8,6 +8,8 @@ namespace Dspbee\Core;
 use Dspbee\Bundle\Template\Native;
 
 /**
+ * Process request and get response.
+ *
  * Class Application
  * @package Dspbee\Core
  */
@@ -23,14 +25,17 @@ class Application
      *
      * @return Response
      */
-    public function run($packageRoot, $languageList = [], $packageList = [], $url = null)
+    public function run($packageRoot, array $languageList = [], array $packageList = [], $url = null): Response
     {
         $request = new Request($languageList, $packageList, $url);
 
         /**
-         * Register autoload to package src dir.
+         * Register autoload to package package/src dir.
          */
         spl_autoload_register(function ($path) use ($packageRoot) {
+            /**
+             * Delete vendor from path.
+             */
             $path = explode('\\', $path);
             array_shift($path);
             $path = $packageRoot . 'src/' . implode('/', $path) . '.php';
@@ -48,9 +53,15 @@ class Application
             /**
              * Custom routing.
              */
+            /**
+             * Path to router class.
+             */
             $path = $packageRoot . $request->packageRoute()  . '.php';
             if (file_exists($path)) {
                 require $path;
+                /**
+                 * Name of router class.
+                 */
                 $route = $request->package() . '\\' . $request->packageRoute();
                 /**
                  * @var IRoute $route
@@ -67,16 +78,18 @@ class Application
             /**
              * Default routing.
              */
-            $handler = 'Index';
-            if (isset($_POST['handler'])) {
-                $handler = str_replace('.', '', ucfirst($_POST['handler']));
-            } elseif (isset($_GET['handler'])) {
-                $handler = str_replace('.', '', ucfirst($_GET['handler']));
-            }
+            $handler = $_POST['handler'] ?? $_GET['handler'] ?? 'Index';
+            $handler = str_replace('.', '', ucfirst($handler));
 
+            /**
+             * Path to controller class.
+             */
             $path = $packageRoot . 'Route/' . $request->route() . '/' . $request->method() . '/' . $handler . '.php';
             if (file_exists($path)) {
                 require $path;
+                /**
+                 * Name of controller class.
+                 */
                 $handler = $request->package() . '\\Route\\' . $request->route() . '\\' . $request->method() . '\\' . $handler;
                 /**
                  * @var IProcess $handler

@@ -51,7 +51,7 @@ class EnvBag extends ValueBag
      */
     public function fetch($key, $default = null)
     {
-        return isset($_ENV[$key]) ? $_ENV[$key] : $default;
+        return $_ENV[$key] ?? $default;
     }
 
     /**

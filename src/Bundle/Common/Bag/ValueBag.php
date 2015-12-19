@@ -59,7 +59,7 @@ class ValueBag
      */
     public function fetch($key, $default = null)
     {
-        return isset($this->bag[$key]) ? $this->bag[$key] : $default;
+        return $this->bag[$key] ?? $default;
     }
 
     /**

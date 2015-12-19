@@ -6,6 +6,8 @@
 namespace Dspbee\Core;
 
 /**
+ * Interface to custom router.
+ *
  * Interface IRoute
  * @package Dspbee\Core
  */
@@ -21,5 +23,5 @@ interface IRoute
      *
      * @return IProcess.
      */
-    public function getProcess();
+    public function getProcess(): IProcess;
 }

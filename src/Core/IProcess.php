@@ -6,6 +6,8 @@
 namespace Dspbee\Core;
 
 /**
+ * Controller interface.
+ *
  * Interface IProcess
  * @package Dspbee\Core
  */
@@ -22,5 +24,5 @@ interface IProcess
      *
      * @return Response
      */
-    public function process();
+    public function process(): Response;
 }

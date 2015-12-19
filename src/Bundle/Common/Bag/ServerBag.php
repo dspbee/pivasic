@@ -54,7 +54,7 @@ class ServerBag extends ValueBag
             return $_SERVER[$key];
         } else {
             $key = 'HTTP_' . $key;
-            return isset($_SERVER[$key]) ? $_SERVER[$key] : $default;
+            return $_SERVER[$key] ?? $default;
         }
     }
 

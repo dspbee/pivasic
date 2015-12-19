@@ -51,7 +51,7 @@ class CookieBag extends ValueBag
      */
     public function fetch($key, $default = null)
     {
-        return isset($_COOKIE[$key]) ? $_COOKIE[$key] : $default;
+        return $_COOKIE[$key] ?? $default;
     }
 
     /**

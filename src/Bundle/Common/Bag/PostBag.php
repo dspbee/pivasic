@@ -51,7 +51,7 @@ class PostBag extends ValueBag
      */
     public function fetch($key, $default = null)
     {
-        return isset($_POST[$key]) ? $_POST[$key] : $default;
+        return $_POST[$key] ?? $default;
     }
 
     /**

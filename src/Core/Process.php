@@ -8,6 +8,8 @@ namespace Dspbee\Core;
 use Dspbee\Bundle\Template\Native;
 
 /**
+ * Base functions to process request.
+ *
  * Class Process
  * @package Dspbee\Core
  */
@@ -26,17 +28,17 @@ abstract class Process implements IProcess
     /**
      * @return Response
      */
-    public abstract function process();
+    public abstract function process(): Response;
 
     /**
      * Response template content.
      *
-     * @param $name
+     * @param string $name
      * @param array $data
      *
      * @return Response
      */
-    public function renderNative($name, array $data = [])
+    public function renderNative($name, array $data = []): Response
     {
         $response = new Response;
         $template = new Native($this->packageRoot, $this->request);
@@ -51,7 +53,7 @@ abstract class Process implements IProcess
      *
      * @return Response
      */
-    public function renderContent($content)
+    public function renderContent($content): Response
     {
         $response = new Response();
         $response->setContent($content);
@@ -59,6 +61,8 @@ abstract class Process implements IProcess
     }
 
     /**
+     * Redirect to URL with statusCode and terminate app.
+     *
      * @param null $url
      * @param int $statusCode
      */

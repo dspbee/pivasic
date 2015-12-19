@@ -74,7 +74,7 @@ class SessionBag extends ValueBag
      */
     public function fetch($key, $default = null)
     {
-        return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
+        return $_SESSION[$key] ?? $default;
     }
 
     /**

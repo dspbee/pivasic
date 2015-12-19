@@ -6,6 +6,8 @@
 namespace Dspbee\Core;
 
 /**
+ * Represents a HTTP response.
+ *
  * Class Response
  * @package Dspbee\Core
  */
@@ -17,7 +19,7 @@ class Response
     }
 
     /**
-     * Send response content.
+     * Send response.
      */
     public function send()
     {
@@ -178,7 +180,7 @@ class Response
     }
 
     /**
-     * Redirect to URL.
+     * Redirect to url with statusCode and terminate.
      *
      * @param null|string $url
      * @param int $statusCode
@@ -205,6 +207,7 @@ class Response
 
         } else {
             header('Location: ' . $url, true, $statusCode);
+
             echo sprintf('<!DOCTYPE html>
 <html>
     <head>
