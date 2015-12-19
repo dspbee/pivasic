@@ -8,6 +8,8 @@ namespace Dspbee\Bundle\Template;
 use Dspbee\Core\Request;
 
 /**
+ * Service PHP template.
+ *
  * Class Native
  * @package Dspbee\Bundle\Template
  */
