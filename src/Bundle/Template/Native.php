@@ -5,6 +5,8 @@
  */
 namespace Dspbee\Bundle\Template;
 
+use Dspbee\Core\Request;
+
 /**
  * Class Native
  * @package Dspbee\Bundle\Template
@@ -13,10 +15,13 @@ class Native
 {
     /**
      * @param string $packageRoot
+     * @param Request|null $request
      */
-    public function __construct($packageRoot)
+    public function __construct($packageRoot, Request $request = null, $dev = true)
     {
         $this->packageRoot = $packageRoot;
+        $this->request = $request;
+        $this->dev = $dev;
     }
 
     /**
@@ -29,8 +34,8 @@ class Native
      */
     public function getContent($name, array $data = [])
     {
-        $path = $this->packageRoot . 'view/cache/' . $name;
-        if (!file_exists($path)) {
+        $path = $this->packageRoot . 'view/cache/' . str_replace('/', '_', $name);
+        if (!file_exists($path) || $this->dev) {
             $code = $this->compile($name, true, true);
             if (empty($code)) {
                 return null;
@@ -46,6 +51,10 @@ class Native
 
         $fh = fopen($path, 'rb');
         flock($fh, LOCK_SH);
+
+        if (null !== $this->request) {
+            $data = array_replace($data, ['request' => $this->request]);
+        }
 
         $html = self::renderTemplate($path, $data);
 
@@ -154,6 +163,8 @@ class Native
         }
     }
 
+    private $request;
     private $packageRoot;
+    private $dev;
 }
 

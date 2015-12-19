@@ -29,10 +29,11 @@ class Request
 
         $this->method = 'GET';
 
+        $this->languageDefault = key($languageList);
         $this->languageCode = '';
         $this->languageName = '';
-        $this->package = 'Default';
-        $this->packageRoute = null;
+        $this->package = 'Original';
+        $this->packageRoute = false;
         $this->route = 'index';
 
         $this->get = null;
@@ -106,6 +107,37 @@ class Request
     }
 
     /**
+     * Return absolute url path or full uri.
+     *
+     * @param string $route
+     * @param bool $domain
+     *
+     * @return string
+     */
+    public function makeUrl($route = '', $domain = false)
+    {
+        if ($this->languageCode != $this->languageDefault) {
+            $url = trim('/' . $this->languageCode . '/' . lcfirst($this->package) . '/' . $route, '/');
+        } else {
+            $url = trim('/' . lcfirst($this->package) . '/' . $route, '/');
+        }
+        if ($domain) {
+            if (isset($_SERVER['HTTP_HOST'])) {
+                $host = $_SERVER['HTTP_HOST'];
+            } else {
+                if (isset($_SERVER['SERVER_NAME'])) {
+                    $host = $_SERVER['SERVER_NAME'];
+                }
+            }
+            $url = 'http://' . $host . '/' . $url;
+        } else {
+            $url = '/' . $url;
+        }
+        return $url;
+    }
+
+
+    /**
      * Request method.
      *
      * @return string
@@ -113,6 +145,14 @@ class Request
     public function method()
     {
         return $this->method;
+    }
+
+    /**
+     * @return string
+     */
+    public function languageDefault()
+    {
+        return $this->languageDefault;
     }
 
     /**
@@ -148,7 +188,7 @@ class Request
     /**
      * Custom routing class.
      *
-     * @return string|null
+     * @return string|int
      */
     public function packageRoute()
     {
@@ -289,6 +329,7 @@ class Request
     private $method;
 
     private $url;
+    private $languageDefault;
     private $languageCode;
     private $languageName;
     private $package;

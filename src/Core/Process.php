@@ -39,7 +39,7 @@ abstract class Process implements IProcess
     public function renderNative($name, array $data = [])
     {
         $response = new Response;
-        $template = new Native($this->packageRoot);
+        $template = new Native($this->packageRoot, $this->request);
         $response->setContent($template->getContent($name, $data));
         return $response;
     }
@@ -56,6 +56,16 @@ abstract class Process implements IProcess
         $response = new Response();
         $response->setContent($content);
         return $response;
+    }
+
+    /**
+     * @param null $url
+     * @param int $statusCode
+     */
+    public function renderRedirect($url = null, $statusCode = 302)
+    {
+        $response = new Response();
+        $response->redirect($url, $statusCode);
     }
 
     protected $packageRoot;

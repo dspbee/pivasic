@@ -26,10 +26,9 @@ class Application
     public function run($packageRoot, $languageList = [], $packageList = [], $url = null)
     {
         $request = new Request($languageList, $packageList, $url);
-        $packageRoot .= $request->package() . '/';
 
         /**
-         * Register autoload.
+         * Register autoload to package src dir.
          */
         spl_autoload_register(function ($path) use ($packageRoot) {
             $path = explode('\\', $path);
@@ -40,14 +39,19 @@ class Application
             }
         });
 
-        if (null !== $request->packageRoute()) {
+        $packageRoot .= $request->package() . '/';
+
+        /**
+         * Process request.
+         */
+        if (false !== $request->packageRoute()) {
             /**
              * Custom routing.
              */
             $path = $packageRoot . $request->packageRoute()  . '.php';
             if (file_exists($path)) {
-                require_once $path;
-                $route = $request->package() . 'Package\\' . $request->packageRoute();
+                require $path;
+                $route = $request->package() . '\\' . $request->packageRoute();
                 /**
                  * @var IRoute $route
                  */
@@ -70,10 +74,10 @@ class Application
                 $handler = str_replace('.', '', ucfirst($_GET['handler']));
             }
 
-            $path = $packageRoot . 'route/' . $request->route() . '/#' . $request->method() . '/' . $handler . '.php';
+            $path = $packageRoot . 'Route/' . $request->route() . '/' . $request->method() . '/' . $handler . '.php';
             if (file_exists($path)) {
-                require_once $path;
-                $handler = $request->package() . 'Package\\' . $request->route() . '\\' . $request->method() . '\\' . $handler;
+                require $path;
+                $handler = $request->package() . '\\Route\\' . $request->route() . '\\' . $request->method() . '\\' . $handler;
                 /**
                  * @var IProcess $handler
                  */
