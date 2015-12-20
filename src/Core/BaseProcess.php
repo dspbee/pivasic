@@ -13,7 +13,7 @@ use Dspbee\Bundle\Template\Native;
  * Class Process
  * @package Dspbee\Core
  */
-abstract class Process implements IProcess
+abstract class BaseProcess
 {
     /**
      * @param string $packageRoot
@@ -26,9 +26,9 @@ abstract class Process implements IProcess
     }
 
     /**
-     * @return Response
+     * @return Response|null
      */
-    public abstract function process(): Response;
+    public abstract function process();
 
     /**
      * Response template content.

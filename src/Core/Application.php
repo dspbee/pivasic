@@ -64,13 +64,13 @@ class Application
                  */
                 $route = $request->package() . '\\' . $request->packageRoute();
                 /**
-                 * @var IRoute $route
+                 * @var BaseRoute $route
                  */
                 $route = new $route($request);
                 if (null !== $route->getProcess()) {
-                    $process = $route->getProcess()->process();
-                    if (null !== $process) {
-                        return $process;
+                    $response = $route->getProcess()->process();
+                    if (null !== $response) {
+                        return $response;
                     }
                 }
             }
@@ -92,7 +92,7 @@ class Application
                  */
                 $handler = $request->package() . '\\Route\\' . $request->route() . '\\' . $request->method() . '\\' . $handler;
                 /**
-                 * @var IProcess $handler
+                 * @var BaseProcess $handler
                  */
                 $handler = new $handler($packageRoot, $request);
                 $process = $handler->process();

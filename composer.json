@@ -31,7 +31,10 @@
   "autoload": {
     "psr-4": {
       "Dspbee\\": "src/"
-    }
+    },
+    "classmap": [
+      "src/"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
