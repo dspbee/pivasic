@@ -20,7 +20,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/', $request->url());
 
         $request = new Request([], [], ' ');
-        $this->assertNotEquals('/', $request->url());
+        $this->assertEquals('/', $request->url());
 
         $request = new Request(['en' => 'english'], ['Custom' => false], '');
         $this->assertEquals('/', $request->url());
@@ -103,7 +103,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('index', $request->route());
 
         $request = new Request([], [], ' ');
-        $this->assertNotEquals('index', $request->route());
+        $this->assertEquals('index', $request->route());
 
         $request = new Request(['en' => 'english'], ['Custom' => false], '');
         $this->assertEquals('index', $request->route());
@@ -151,6 +151,71 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('blog/foo/bar', $request->route());
 
         $request = new Request(['ru' => 'Русский', 'en' => 'English'], ['Custom' => false], '/blog/foo/bar//');
+        $this->assertEquals('blog/foo/bar', $request->route());
+
+
+
+        $request = new Request([], [], 'app.dev.php');
+        $this->assertEquals('index', $request->route());
+
+        $request = new Request([], [], 'app.dev.php/');
+        $this->assertEquals('index', $request->route());
+
+        $request = new Request([], [], '/app.dev.php///');
+        $this->assertEquals('index', $request->route());
+
+        $request = new Request([], [], 'app.dev.php/');
+        $this->assertEquals('index', $request->route());
+
+        $request = new Request([], [], 'app.dev.php ');
+        $this->assertEquals('index', $request->route());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php');
+        $this->assertEquals('index', $request->route());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/blog');
+        $this->assertEquals('blog', $request->route());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/en');
+        $this->assertEquals('index', $request->route());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/en/blog');
+        $this->assertEquals('blog', $request->route());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/en/blog/');
+        $this->assertEquals('blog', $request->route());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/en/blog////');
+        $this->assertEquals('blog', $request->route());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/en/blog/?page=2');
+        $this->assertEquals('blog', $request->route());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/en/custom/blog?page=2');
+        $this->assertEquals('blog', $request->route());
+
+        $request = new Request(['ru' => 'Русский', 'en' => 'English'], ['Custom' => false], 'app.dev.php/ru/custom/blog?page=2');
+        $this->assertEquals('blog', $request->route());
+
+        $request = new Request([], ['Custom' => false], 'app.dev.php/Custom/blog');
+        $this->assertEquals('blog', $request->route());
+
+        $request = new Request([], ['Custom' => false], 'app.dev.php/custom/blog');
+        $this->assertEquals('blog', $request->route());
+
+        $request = new Request([], ['Manage' => 'MyRoute'], 'app.dev.php/manage/blog');
+        $this->assertEquals('blog', $request->route());
+
+        $request = new Request(['en' => 'English'], ['Custom' => false], 'app.dev.php/en/custom/blog?page=2');
+        $this->assertEquals('blog', $request->route());
+
+        $request = new Request(['ru' => 'Русский', 'en' => 'English'], ['Custom' => false], 'app.dev.php/en/custom/blog?page=2');
+        $this->assertEquals('blog', $request->route());
+
+        $request = new Request(['ru' => 'Русский', 'en' => 'English'], ['Custom' => false], 'app.dev.php/en/custom/blog/foo/bar');
+        $this->assertEquals('blog/foo/bar', $request->route());
+
+        $request = new Request(['ru' => 'Русский', 'en' => 'English'], ['Custom' => false], 'app.dev.php//blog/foo/bar//');
         $this->assertEquals('blog/foo/bar', $request->route());
     }
 

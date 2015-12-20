@@ -57,7 +57,7 @@ class Request
 
         $url = explode('?', $url);
         $url = $url[0];
-        $url = trim($url, '/');
+        $url = trim(trim($url), '/');
         if ('' !== $url) {
             $partList = explode('/', $url);
             /**
@@ -85,6 +85,7 @@ class Request
              */
             if (count($partList)) {
                 $this->route = implode('/', $partList);
+                $this->route = trim($this->route, '/');
             }
         }
 
