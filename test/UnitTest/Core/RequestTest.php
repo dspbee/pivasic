@@ -48,6 +48,45 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $request = new Request(['ru' => 'Русский', 'en' => 'English'], ['Custom' => false], 'ru/custom/blog?page=2');
         $this->assertEquals('/ru/custom/blog', $request->url());
+
+        $request = new Request([], [], 'app.dev.php/');
+        $this->assertEquals('/app.dev.php', $request->url());
+
+        $request = new Request([], [], '/app.dev.php///');
+        $this->assertEquals('/app.dev.php', $request->url());
+
+        $request = new Request([], [], 'app.dev.php');
+        $this->assertEquals('/app.dev.php', $request->url());
+
+        $request = new Request([], [], 'app.dev.php ');
+        $this->assertEquals('/app.dev.php', $request->url());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php');
+        $this->assertEquals('/app.dev.php', $request->url());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/blog');
+        $this->assertEquals('/app.dev.php/blog', $request->url());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/en');
+        $this->assertEquals('/app.dev.php/en', $request->url());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/en/blog');
+        $this->assertEquals('/app.dev.php/en/blog', $request->url());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/en/blog/');
+        $this->assertEquals('/app.dev.php/en/blog', $request->url());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/en/blog////');
+        $this->assertEquals('/app.dev.php/en/blog', $request->url());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/en/blog/?page=2');
+        $this->assertEquals('/app.dev.php/en/blog', $request->url());
+
+        $request = new Request(['en' => 'english'], ['Custom' => false], 'app.dev.php/en/custom/blog?page=2');
+        $this->assertEquals('/app.dev.php/en/custom/blog', $request->url());
+
+        $request = new Request(['ru' => 'Русский', 'en' => 'English'], ['Custom' => false], 'app.dev.php/ru/custom/blog?page=2');
+        $this->assertEquals('/app.dev.php/ru/custom/blog', $request->url());
     }
 
     public function testRequestLanguage()
@@ -255,5 +294,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/ru/manage/foo/bar', $request->makeUrl('/foo/bar'));
         $this->assertEquals('http://domain.com/ru/manage', $request->makeUrl('/', true));
         $this->assertEquals('http://domain.com/ru/manage/foo/bar', $request->makeUrl('/foo/bar', true));
+
+        $request = new Request(['en' => 'English', 'ru' => 'Russian'], ['Manage' => false], 'app.dev.php/en/manage');
+        $this->assertEquals('/app.dev.php/manage', $request->makeUrl('/'));
+        $this->assertEquals('/app.dev.php/manage/foo/bar', $request->makeUrl('/foo/bar'));
+        $this->assertEquals('http://domain.com/app.dev.php/manage', $request->makeUrl('/', true));
+        $this->assertEquals('http://domain.com/app.dev.php/manage/foo/bar', $request->makeUrl('/foo/bar', true));
     }
 }

@@ -61,7 +61,7 @@ class Request
         if ('' !== $url) {
             $partList = explode('/', $url);
             /**
-             * Delete front controller from URL.
+             * Delete front controller.
              */
             if (false !== strpos($partList[0], '.php')) {
                 array_shift($partList);
@@ -126,6 +126,11 @@ class Request
      */
     public function makeUrl($route = '', $domain = false)
     {
+        $controller = '';
+        if (false !== strpos($this->url, '.php')) {
+            $controller = explode('.php', $this->url);
+            $controller = ltrim($controller[0], '/') . '.php';
+        }
         $route = trim($route, '/');
         if ('Original' == $this->package) {
             if ($this->languageCode != $this->languageDefault) {
@@ -151,13 +156,26 @@ class Request
                 (isset($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS']) ||
                 (isset($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])
             ) {
-                $url = 'https://' . $host . '/' . $url;
+                if (empty($controller)) {
+                    $url = 'https://' . $host . '/' . $url;
+                } else {
+                    $url = 'https://' . $host . '/' . $controller . '/' . $url;
+                }
             } else {
-                $url = 'http://' . $host . '/' . $url;
+                if (empty($controller)) {
+                    $url = 'http://' . $host . '/' . $url;
+                } else {
+                    $url = 'http://' . $host . '/' . $controller . '/' . $url;
+                }
             }
         } else {
-            $url = '/' . $url;
+            if (empty($controller)) {
+                $url = '/' . $url;
+            } else {
+                $url = '/' . $controller . '/' . $url;
+            }
         }
+
         return $url;
     }
 

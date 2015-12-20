@@ -8,19 +8,17 @@ namespace Dspbee\Bundle\Template;
 use Dspbee\Core\Request;
 
 /**
- * Service PHP template.
- *
  * Class Native
  * @package Dspbee\Bundle\Template
  */
 class Native
 {
     /**
-     * @param $packageRoot
+     * @param string $packageRoot
      * @param Request|null $request
      * @param bool $dev
      */
-    public function __construct($packageRoot, Request $request = null, $dev = true)
+    public function __construct($packageRoot, Request $request = null, $dev = false)
     {
         $this->packageRoot = $packageRoot;
         $this->request = $request;
@@ -125,16 +123,16 @@ class Native
     /**
      * Safe include. Used for scope isolation.
      *
-     * @param string $file  File to include
-     * @param array  $data  Data passed to template
+     * @param string $__file__  File to include
+     * @param array  $data      Data passed to template
      *
      * @return string
      */
-    private static function renderTemplate($file, array $data)
+    private static function renderTemplate($__file__, array $data)
     {
         ob_start();
         extract($data);
-        include $file;
+        include $__file__;
         return ob_get_clean();
     }
 
