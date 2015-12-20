@@ -16,6 +16,8 @@ use Dspbee\Core\Response;
  */
 class Wrap
 {
+    public static $debugEnabled = false;
+
     /**
      * @param \Throwable $e
      *

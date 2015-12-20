@@ -5,6 +5,7 @@
  */
 namespace Dspbee\Bundle\Template;
 
+use Dspbee\Bundle\Debug\Wrap;
 use Dspbee\Core\Request;
 
 /**
@@ -16,13 +17,11 @@ class Native
     /**
      * @param string $packageRoot
      * @param Request|null $request
-     * @param bool $dev
      */
-    public function __construct($packageRoot, Request $request = null, $dev = false)
+    public function __construct($packageRoot, Request $request = null)
     {
         $this->packageRoot = $packageRoot;
         $this->request = $request;
-        $this->dev = $dev;
     }
 
     /**
@@ -36,7 +35,7 @@ class Native
     public function getContent($name, array $data = [])
     {
         $path = $this->packageRoot . 'view/cache/' . str_replace('/', '_', $name);
-        if (!file_exists($path) || $this->dev) {
+        if (!file_exists($path) || Wrap::$debugEnabled) {
             $code = $this->compile($name, true, true);
             if (empty($code)) {
                 return null;
@@ -70,7 +69,7 @@ class Native
      */
     public function clearCache()
     {
-        $this->removeDir($this->packageRoot . 'view/cache');
+        $this->removeFromDir($this->packageRoot . 'view/cache');
     }
 
     /**
@@ -142,14 +141,14 @@ class Native
      * @param string $dir   Path to the directory
      * @param bool   $self  If true then delete root directory
      */
-    private function removeDir($dir, $self = false)
+    private function removeFromDir($dir, $self = false)
     {
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ('.' != $object && '..' != $object) {
                     if ('dir' == filetype($dir . '/' .$object)) {
-                        $this->removeDir($dir . '/' . $object, true);
+                        $this->removeFromDir($dir . '/' . $object, true);
                     } else {
                         unlink($dir . '/' . $object);
                     }
@@ -166,6 +165,5 @@ class Native
 
     private $request;
     private $packageRoot;
-    private $dev;
 }
 
