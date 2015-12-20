@@ -40,9 +40,15 @@
 </head>
 <body>
     <div class="exception">
-        <h1>
-            Exception detected <? if (!empty($code)): ?>[<?= $code ?>]<? endif ?>
-        </h1>
+        <? if (1 == $code): ?>
+            <h1>
+                Fatal error
+            </h1>
+        <? else: ?>
+            <h1>
+                Exception detected <? if (!empty($code)): ?>[<?= $code ?>]<? endif ?>
+            </h1>
+        <? endif ?>
         <table>
             <tr>
                 <td>
