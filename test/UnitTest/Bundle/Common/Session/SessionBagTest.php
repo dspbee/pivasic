@@ -1,24 +1,27 @@
 <?php
-namespace Dspbee\Test\Bundle\Common\Bag;
+namespace Dspbee\Test\Bundle\Common\Session;
 
-use Dspbee\Bundle\Common\Bag\EnvBag;
+use Dspbee\Bundle\Common\Session\SessionBag;
 
-class EnvBagTest extends \PHPUnit_Framework_TestCase
+session_start();
+
+class SessionBagTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var EnvBag
+     * @var SessionBag
      */
     protected $bag;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->bag = new EnvBag();
+        $this->bag = new SessionBag();
     }
 
     protected function tearDown()
     {
         $this->bag = null;
+        $_SESSION = [];
     }
 
     /**
@@ -27,7 +30,7 @@ class EnvBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testEnvAdd($key, $value)
+    public function testSessionAdd($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertEquals($value, $this->bag->fetch($key));
@@ -39,7 +42,7 @@ class EnvBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testEnvGet($key, $value)
+    public function testSessionGet($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertEquals($value, $this->bag->fetch($key));
@@ -51,7 +54,7 @@ class EnvBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testEnvHas($key, $value)
+    public function testSessionHas($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertTrue($this->bag->has($key));
@@ -63,7 +66,7 @@ class EnvBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProviderKeys
      */
-    public function testEnvKeys($list, $keys)
+    public function testSessionKeys($list, $keys)
     {
         $this->bag->add($list);
         $this->assertEquals($keys, $this->bag->keys());
@@ -75,10 +78,16 @@ class EnvBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProviderCount
      */
-    public function testEnvCount($list, $count)
+    public function testSessionCount($list, $count)
     {
         $this->bag->add($list);
         $this->assertEquals($count, $this->bag->count());
+    }
+
+    public function setSessionSet()
+    {
+        $this->bag->set('foo_', '_bar');
+        $this->assertEquals('_bar', $this->bag->fetch('foo_'));
     }
 
     public function setProvider()

@@ -27,7 +27,7 @@ class HeaderBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testCookieAdd($key, $value)
+    public function testHeaderAdd($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertEquals($value, $this->bag->fetch($key));
@@ -39,7 +39,7 @@ class HeaderBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testCookieGet($key, $value)
+    public function testHeaderGet($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertEquals($value, $this->bag->fetch($key));
@@ -51,7 +51,7 @@ class HeaderBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testCookieHas($key, $value)
+    public function testHeaderHas($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertTrue($this->bag->has($key));
@@ -63,7 +63,7 @@ class HeaderBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProviderKeys
      */
-    public function testCookieKeys($list, $keys)
+    public function testHeaderKeys($list, $keys)
     {
         $this->bag->add($list);
         $this->assertEquals($keys, $this->bag->keys());
@@ -75,7 +75,7 @@ class HeaderBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProviderCount
      */
-    public function testCookieCount($list, $count)
+    public function testHeaderCount($list, $count)
     {
         $this->bag->add($list);
         $this->assertEquals($count, $this->bag->count());

@@ -27,7 +27,7 @@ class GetBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testCookieAdd($key, $value)
+    public function testBagAdd($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertEquals($value, $this->bag->fetch($key));
@@ -39,7 +39,7 @@ class GetBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testCookieGet($key, $value)
+    public function testBagGet($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertEquals($value, $this->bag->fetch($key));
@@ -51,7 +51,7 @@ class GetBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testCookieHas($key, $value)
+    public function testBagHas($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertTrue($this->bag->has($key));
@@ -63,7 +63,7 @@ class GetBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProviderKeys
      */
-    public function testCookieKeys($list, $keys)
+    public function testBagKeys($list, $keys)
     {
         $this->bag->add($list);
         $this->assertEquals($keys, $this->bag->keys());
@@ -75,7 +75,7 @@ class GetBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProviderCount
      */
-    public function testCookieCount($list, $count)
+    public function testBagCount($list, $count)
     {
         $this->bag->add($list);
         $this->assertEquals($count, $this->bag->count());

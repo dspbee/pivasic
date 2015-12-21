@@ -27,7 +27,7 @@ class ServerBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testCookieAdd($key, $value)
+    public function testServerAdd($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertEquals($value, $this->bag->fetch($key));
@@ -39,7 +39,7 @@ class ServerBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testCookieGet($key, $value)
+    public function testServerGet($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertEquals($value, $this->bag->fetch($key));
@@ -51,7 +51,7 @@ class ServerBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testCookieHas($key, $value)
+    public function testServerHas($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertTrue($this->bag->has($key));

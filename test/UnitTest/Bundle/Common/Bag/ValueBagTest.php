@@ -99,7 +99,7 @@ class ValueBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testCookieAdd($key, $value)
+    public function testAdd($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertEquals($value, $this->bag->fetch($key));
@@ -111,7 +111,7 @@ class ValueBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testCookieGet($key, $value)
+    public function testGet($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertEquals($value, $this->bag->fetch($key));
@@ -123,7 +123,7 @@ class ValueBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProvider
      */
-    public function testCookieHas($key, $value)
+    public function testHas($key, $value)
     {
         $this->bag->add([$key => $value]);
         $this->assertTrue($this->bag->has($key));
@@ -135,7 +135,7 @@ class ValueBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProviderKeys
      */
-    public function testCookieKeys($list, $keys)
+    public function testKeys($list, $keys)
     {
         $this->bag->add($list);
         $this->assertEquals($keys, $this->bag->keys());
@@ -147,7 +147,7 @@ class ValueBagTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider setProviderCount
      */
-    public function testCookieCount($list, $count)
+    public function testCount($list, $count)
     {
         $this->bag->add($list);
         $this->assertEquals($count, $this->bag->count());
