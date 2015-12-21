@@ -26,12 +26,14 @@ abstract class BaseProcess
     }
 
     /**
+     * Create response.
+     *
      * @return Response|null
      */
     public abstract function process();
 
     /**
-     * Response template content.
+     * Create Response from template.
      *
      * @param string $name
      * @param array $data
@@ -47,7 +49,7 @@ abstract class BaseProcess
     }
 
     /**
-     * Response content.
+     * Create Response from content.
      *
      * @param string $content
      *

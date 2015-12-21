@@ -117,7 +117,7 @@ class Request
     }
 
     /**
-     * Return absolute url path or full uri.
+     * Create absolute url path or full uri from route.
      *
      * @param string $route
      * @param bool $domain

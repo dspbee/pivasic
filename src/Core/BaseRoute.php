@@ -19,7 +19,7 @@ class BaseRoute
     }
 
     /**
-     * Get object of Process to handle the request.
+     * Get object of BaseProcess to handle the request.
      *
      * @return BaseProcess|null.
      */

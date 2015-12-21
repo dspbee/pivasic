@@ -301,4 +301,19 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://domain.com/app.dev.php/manage', $request->makeUrl('/', true));
         $this->assertEquals('http://domain.com/app.dev.php/manage/foo/bar', $request->makeUrl('/foo/bar', true));
     }
+
+    public function testBag()
+    {
+        $request = new Request();
+
+        $this->assertInstanceOf('Dspbee\Bundle\Common\Bag\GetBag', $request->get());
+        $this->assertInstanceOf('Dspbee\Bundle\Common\Bag\PostBag', $request->post());
+        $this->assertInstanceOf('Dspbee\Bundle\Common\Bag\CookieBag', $request->cookie());
+        $this->assertInstanceOf('Dspbee\Bundle\Common\Session\Session', $request->session());
+        $this->assertInstanceOf('Dspbee\Bundle\Common\File\FileBag', $request->file());
+        $this->assertInstanceOf('Dspbee\Bundle\Common\Bag\EnvBag', $request->env());
+        $this->assertInstanceOf('Dspbee\Bundle\Common\Bag\ServerBag', $request->server());
+        $this->assertInstanceOf('Dspbee\Bundle\Common\Bag\HeaderBag', $request->header());
+        $this->assertInstanceOf('Dspbee\Bundle\Common\Bag\ValueBag', $request->data());
+    }
 }
