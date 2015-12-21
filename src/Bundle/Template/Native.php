@@ -17,11 +17,18 @@ class Native
     /**
      * @param string $packageRoot
      * @param Request|null $request
+     * @param bool $cache
      */
-    public function __construct($packageRoot, Request $request = null)
+    public function __construct($packageRoot, Request $request = null, $cache = true)
     {
-        $this->packageRoot = $packageRoot;
+        $this->packageRoot = rtrim($packageRoot, '/');
         $this->request = $request;
+
+        if (class_exists('Dspbee\Bundle\Debug\Wrap')) {
+            $this->cache = !Wrap::$debugEnabled;
+        } else {
+            $this->cache = $cache;
+        }
     }
 
     /**
@@ -34,8 +41,9 @@ class Native
      */
     public function getContent($name, array $data = [])
     {
-        $path = $this->packageRoot . 'view/cache/' . str_replace('/', '_', $name);
-        if (!file_exists($path) || Wrap::$debugEnabled) {
+        $path = $this->packageRoot . '/view/cache/' . str_replace('/', '_', $name);
+
+        if (!file_exists($path) || !$this->cache) {
             $code = $this->compile($name, true, true);
             if (empty($code)) {
                 return null;
@@ -69,7 +77,7 @@ class Native
      */
     public function clearCache()
     {
-        $this->removeFromDir($this->packageRoot . 'view/cache');
+        $this->removeFromDir($this->packageRoot . '/view/cache');
     }
 
     /**
@@ -84,7 +92,7 @@ class Native
     private function compile($name, $processInclude, $processExtends)
     {
         $code = null;
-        $path = $this->packageRoot . 'view/' . $name;
+        $path = $this->packageRoot . '/view/' . $name;
 
         if (file_exists($path)) {
             ob_start();
@@ -165,5 +173,6 @@ class Native
 
     private $request;
     private $packageRoot;
+    private $cache;
 }
 

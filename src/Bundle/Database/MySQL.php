@@ -20,9 +20,11 @@ class MySQL
     public function __construct($host, $login, $password, $database) {
         $this->db = null;
 
-        $this->db = new \mysqli($host, $login, $password, $database);
-        if (!$this->db->connect_error) {
-            $this->db->query("SET NAMES 'UTF8'");
+        if (!empty($login) && !empty($database)) {
+            $this->db = new \mysqli($host, $login, $password, $database);
+            if (!$this->db->connect_error) {
+                $this->db->query("SET NAMES 'UTF8'");
+            }
         }
     }
 
