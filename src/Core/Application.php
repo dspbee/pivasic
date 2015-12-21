@@ -33,6 +33,7 @@ class Application
          * Register autoload to package package/src dir.
          */
         spl_autoload_register(function ($path) use ($packageRoot) {
+            $packageRoot = rtrim($packageRoot, '/') . '/';
             /**
              * Delete vendor from path.
              */
