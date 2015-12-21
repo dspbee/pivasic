@@ -11,6 +11,11 @@ namespace Dspbee\Bundle\Common\Bag;
  */
 class PostBag extends ValueBag
 {
+    public function __construct()
+    {
+        parent::__construct([]);
+    }
+
     /**
      * @param array $bag
      */
