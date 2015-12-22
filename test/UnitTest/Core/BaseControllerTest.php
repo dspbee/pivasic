@@ -15,10 +15,12 @@ class BaseProcessTest extends \PHPUnit_Framework_TestCase
         /**
          * @var BaseController $stub
          */
-        $this->assertInstanceOf('Dspbee\Core\Response', $stub->renderContent('test'));
-        $this->assertEquals('test', $stub->renderContent('test')->getContent());
+        $stub->setContent('test');
+        $this->assertInstanceOf('Dspbee\Core\Response', $stub->getResponse());
+        $this->assertEquals('test', $stub->getResponse()->getContent());
 
-        $this->assertInstanceOf('Dspbee\Core\Response', $stub->renderNative('test'));
-        $this->assertNull($stub->renderNative('test')->getContent());
+        $stub->setTemplate('test');
+        $this->assertInstanceOf('Dspbee\Core\Response', $stub->getResponse());
+        $this->assertNull($stub->getResponse()->getContent());
     }
 }

@@ -9,6 +9,6 @@ class BaseRouteTest extends \PHPUnit_Framework_TestCase
     {
         $route = new BaseRoute();
 
-        $this->assertNull($route->getProcess());
+        $this->assertNull($route->getResponse());
     }
 }

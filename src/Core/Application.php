@@ -82,7 +82,7 @@ class Application
             $path = $packageRoot . 'Route/' . $request->route() . '/' . $request->method() . '.php';
             if (file_exists($path)) {
                 require $path;
-                $controller = $request->package() . '\\Route_' . $request->route() . '\\' . $request->method();
+                $controller = $request->package() . '\\Route_' . str_replace('/', '_', $request->route()) . '\\' . $request->method();
                 /**
                  * @var BaseController $controller
                  */

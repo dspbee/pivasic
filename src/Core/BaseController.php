@@ -40,7 +40,7 @@ abstract class BaseController
      * @param string $name
      * @param array $data
      */
-    public function renderNative($name, array $data = [])
+    public function setTemplate($name, array $data = [])
     {
         $response = new Response;
         $template = new Native($this->packageRoot, $this->request);
@@ -53,7 +53,7 @@ abstract class BaseController
      *
      * @param string $content
      */
-    public function renderContent($content)
+    public function setContent($content)
     {
         $response = new Response();
         $response->setContent($content);
