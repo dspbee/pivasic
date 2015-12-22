@@ -20,11 +20,11 @@ class BaseRoute
      */
     public function getResponse(): Response
     {
-        return $this->process;
+        return $this->response;
     }
 
     /**
      * @var Response|null
      */
-    protected $process = null;
+    protected $response = null;
 }
