@@ -23,43 +23,41 @@ abstract class BaseController
     {
         $this->packageRoot = $packageRoot;
         $this->request = $request;
+        $this->response = null;
     }
 
     /**
-     * Create response.
-     *
      * @return Response|null
      */
-    public abstract function process();
+    public function getResponse()
+    {
+        return $this->response;
+    }
 
     /**
      * Create Response from template.
      *
      * @param string $name
      * @param array $data
-     *
-     * @return Response
      */
-    public function renderNative($name, array $data = []): Response
+    public function renderNative($name, array $data = [])
     {
         $response = new Response;
         $template = new Native($this->packageRoot, $this->request);
         $response->setContent($template->getContent($name, $data));
-        return $response;
+        $this->response = $response;
     }
 
     /**
      * Create Response from content.
      *
      * @param string $content
-     *
-     * @return Response
      */
-    public function renderContent($content): Response
+    public function renderContent($content)
     {
         $response = new Response();
         $response->setContent($content);
-        return $response;
+        $this->response = $response;
     }
 
     /**
@@ -76,4 +74,5 @@ abstract class BaseController
 
     protected $packageRoot;
     protected $request;
+    protected $response;
 }

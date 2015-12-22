@@ -76,26 +76,27 @@ class Application
             /**
              * Default routing.
              */
-            $handler = $_POST['handler'] ?? $_GET['handler'] ?? 'Index';
-            $handler = str_replace('.', '', ucfirst($handler));
-
             /**
              * Path to controller class.
              */
-            $path = $packageRoot . 'Route/' . $request->route() . '/' . $request->method() . '/' . $handler . '.php';
+            $path = $packageRoot . 'Route/' . $request->route() . '/' . $request->method() . '.php';
             if (file_exists($path)) {
                 require $path;
+                $controller = $request->package() . '\\Route_' . $request->route() . '\\' . $request->method();
                 /**
-                 * Name of controller class.
+                 * @var BaseController $controller
                  */
-                $handler = $request->package() . '\\Route\\' . $request->route() . '\\' . $request->method() . '\\' . $handler;
+                $controller = new $controller($packageRoot, $request);
+
                 /**
-                 * @var BaseController $handler
+                 * Call handler
                  */
-                $handler = new $handler($packageRoot, $request);
-                $process = $handler->process();
-                if (null !== $process) {
-                    return $process;
+                $handler = $_POST['handler'] ?? $_GET['handler'] ?? 'index';
+                $handler = str_replace('.', '', ucfirst($handler));
+                $controller->$handler();
+
+                if (null !== $controller->getResponse()) {
+                    return $controller->getResponse();
                 }
             }
         }
