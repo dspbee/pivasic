@@ -13,11 +13,6 @@ namespace Dspbee\Core;
  */
 class BaseRoute
 {
-    public function __construct()
-    {
-        $this->process = null;
-    }
-
     /**
      * Get object of BaseProcess to handle the request.
      *
@@ -31,5 +26,5 @@ class BaseRoute
     /**
      * @var BaseController|null
      */
-    protected $process;
+    protected $process = null;
 }
