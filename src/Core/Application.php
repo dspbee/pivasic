@@ -30,16 +30,14 @@ class Application
         $request = new Request($languageList, $packageList, $url);
 
         /**
-         * Register autoload to package package/src dir.
+         * Register autoload to app/package/src dir's.
          */
         spl_autoload_register(function ($path) use ($packageRoot) {
             $packageRoot = rtrim($packageRoot, '/') . '/';
-            /**
-             * Delete vendor from path.
-             */
             $path = explode('\\', $path);
-            array_shift($path);
-            $path = $packageRoot . 'src/' . implode('/', $path) . '.php';
+            array_shift($path);                 // Vendor
+            $packageRoot .= array_shift($path); // Package
+            $path = $packageRoot . '/src/' . implode('/', $path) . '.php';
             if (file_exists($path)) {
                 require_once $path;
             }
