@@ -21,7 +21,7 @@ class BaseRoute
     /**
      * Get object of BaseProcess to handle the request.
      *
-     * @return BaseProcess|null.
+     * @return BaseController|null.
      */
     public function getProcess()
     {
@@ -29,7 +29,7 @@ class BaseRoute
     }
 
     /**
-     * @var BaseProcess|null
+     * @var BaseController|null
      */
     protected $process;
 }

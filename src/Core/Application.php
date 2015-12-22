@@ -93,7 +93,7 @@ class Application
                  */
                 $handler = $request->package() . '\\Route\\' . $request->route() . '\\' . $request->method() . '\\' . $handler;
                 /**
-                 * @var BaseProcess $handler
+                 * @var BaseController $handler
                  */
                 $handler = new $handler($packageRoot, $request);
                 $process = $handler->process();

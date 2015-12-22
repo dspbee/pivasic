@@ -10,10 +10,10 @@ use Dspbee\Bundle\Template\Native;
 /**
  * Base functions to process request.
  *
- * Class Process
+ * Class BaseController
  * @package Dspbee\Core
  */
-abstract class BaseProcess
+abstract class BaseController
 {
     /**
      * @param string $packageRoot
