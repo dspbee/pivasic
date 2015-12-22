@@ -68,11 +68,8 @@ class Application
                  * @var BaseRoute $route
                  */
                 $route = new $route($request);
-                if (null !== $route->getProcess()) {
-                    $response = $route->getProcess()->process();
-                    if (null !== $response) {
-                        return $response;
-                    }
+                if (null !== $route->getResponse()) {
+                    return $route->getResponse();
                 }
             }
         } else {

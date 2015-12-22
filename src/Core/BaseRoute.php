@@ -14,17 +14,17 @@ namespace Dspbee\Core;
 class BaseRoute
 {
     /**
-     * Get object of BaseProcess to handle the request.
+     * Get object of Response.
      *
-     * @return BaseController|null.
+     * @return Response|null.
      */
-    public function getProcess()
+    public function getResponse(): Response
     {
         return $this->process;
     }
 
     /**
-     * @var BaseController|null
+     * @var Response|null
      */
     protected $process = null;
 }
