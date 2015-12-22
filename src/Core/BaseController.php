@@ -66,7 +66,7 @@ abstract class BaseController
      * @param null $url
      * @param int $statusCode
      */
-    public function renderRedirect($url = null, $statusCode = 302)
+    public function setRedirect($url = null, $statusCode = 302)
     {
         $response = new Response();
         $response->redirect($url, $statusCode);
