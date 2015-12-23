@@ -24,6 +24,35 @@ class BaseRoute
     }
 
     /**
+     * @param string $packageRoot
+     * @param Request $request
+     */
+    public function default($packageRoot, Request $request)
+    {
+        $packageRoot = rtrim($packageRoot, '/');
+        $path = $packageRoot . '/Route/' . $request->route() . '/' . $request->method() . '.php';
+        if (file_exists($path)) {
+            require $path;
+            $controllerClass = $request->package() . '\\Route_' . str_replace('/', '_', $request->route()) . '\\' . $request->method();
+
+            /**
+             * @var BaseController $controller
+             */
+            $controller = new $controllerClass($packageRoot, $request);
+
+            /**
+             * Call handler.
+             */
+            $handler = $_POST['handler'] ?? $_GET['handler'] ?? 'index';
+            $handler = str_replace('.', '', $handler);
+            if (method_exists($controllerClass, $handler)) {
+                $controller->$handler();
+                $this->response = $controller->getResponse();
+            }
+        }
+    }
+
+    /**
      * @var Response|null
      */
     protected $response = null;
