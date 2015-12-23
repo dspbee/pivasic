@@ -5,10 +5,17 @@ use Dspbee\Bundle\Template\Native;
 
 class NativeTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetContent()
+    /**
+     * @expectedException Dspbee\Bundle\Template\Exception\FileNotFoundException
+     */
+    public function testFileNotFoundException()
     {
         $template = new Native('');
-        $this->assertNull($template->getContent(''));
+        $template->getContent('');
+    }
+
+    public function testGetContent()
+    {
 
         $root = dirname(__FILE__);
         $path = $root . '/view/test.html.php';

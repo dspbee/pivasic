@@ -13,7 +13,7 @@ use Dspbee\Bundle\Template\Native;
  * Class BaseController
  * @package Dspbee\Core
  */
-abstract class BaseController
+class BaseController
 {
     /**
      * @param string $packageRoot

@@ -84,10 +84,10 @@ class Application
         $response = new Response();
         $response->headerStatus(404);
 
-        $template = new Native($packageRoot);
-        $content = $template->getContent('404.html.php');
-        if (null === $content) {
-            $content = '404 Not Found';
+        $content = '404 Not Found';
+        if (file_exists($packageRoot . '/view/404.html.php')) {
+            $template = new Native($packageRoot);
+            $content = $template->getContent('404.html.php');
         }
 
         $response->setContent($content);

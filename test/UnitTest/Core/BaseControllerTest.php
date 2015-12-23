@@ -6,21 +6,28 @@ use Dspbee\Core\Request;
 
 class BaseProcessTest extends \PHPUnit_Framework_TestCase
 {
-    public function testProcess()
+    /**
+     * @expectedException Dspbee\Bundle\Template\Exception\FileNotFoundException
+     */
+    public function testSetTemplate()
     {
-        $stub = $this->getMockForAbstractClass('Dspbee\Core\BaseController', ['', new Request()]);
+        $controller =  new BaseController('', new Request());
+        $controller->setTemplate('test');
+    }
 
-        $stub->expects($this->any())->method('process');
+    public function testSetContent()
+    {
+        $controller =  new BaseController('', new Request());
+        $controller->setContent('test');
+        $this->assertInstanceOf('Dspbee\Core\Response', $controller->getResponse());
+        $this->assertEquals('test', $controller->getResponse()->getContent());
+    }
 
-        /**
-         * @var BaseController $stub
-         */
-        $stub->setContent('test');
-        $this->assertInstanceOf('Dspbee\Core\Response', $stub->getResponse());
-        $this->assertEquals('test', $stub->getResponse()->getContent());
-
-        $stub->setTemplate('test');
-        $this->assertInstanceOf('Dspbee\Core\Response', $stub->getResponse());
-        $this->assertNull($stub->getResponse()->getContent());
+    public function testGetResponse()
+    {
+        $controller = new BaseController('', new Request());
+        $this->assertNull($controller->getResponse());
+        $controller->setContent('');
+        $this->assertInstanceOf('Dspbee\Core\Response', $controller->getResponse());
     }
 }
