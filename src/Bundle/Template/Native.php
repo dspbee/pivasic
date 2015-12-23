@@ -6,6 +6,7 @@
 namespace Dspbee\Bundle\Template;
 
 use Dspbee\Bundle\Debug\Wrap;
+use Dspbee\Bundle\Template\Exception\FileNotFoundException;
 use Dspbee\Core\Request;
 
 /**
@@ -88,6 +89,8 @@ class Native
      * @param bool $processExtends
      *
      * @return string|null
+     *
+     * @throws FileNotFoundException
      */
     private function compile($name, $processInclude, $processExtends)
     {
@@ -98,7 +101,10 @@ class Native
             ob_start();
             readfile($path);
             $code = ob_get_clean();
+        } else {
+            throw new FileNotFoundException($path);
         }
+
 
         if ($processInclude) {
             preg_match_all('/<!-- include (.*) -->/', $code, $matchList);
