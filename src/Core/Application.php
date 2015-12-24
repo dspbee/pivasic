@@ -69,6 +69,8 @@ class Application
                 if (null !== $route->getResponse()) {
                     return $route->getResponse();
                 }
+            } else {
+                throw new \RuntimeException(sprintf('The file "%s" does not exist', $path));
             }
         }  else {
             $route = new BaseRoute();

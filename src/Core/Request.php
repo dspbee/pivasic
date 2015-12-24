@@ -42,7 +42,7 @@ class Request
         $this->languageCode = '';
         $this->languageName = '';
         $this->package = 'Original';
-        $this->packageRoute = false;
+        $this->packageRoute = $packageList['Original'] ?? false;
         $this->route = 'index';
 
         $this->get = null;
