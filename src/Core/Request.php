@@ -85,7 +85,7 @@ class Request
              */
             if (count($partList)) {
                 $this->route = implode('/', $partList);
-                $this->route = trim($this->route, '/');
+                $this->route = trim(str_replace('.', '_', $this->route), '/');
             }
         }
 
