@@ -1,6 +1,16 @@
 <?php
+/**
+ * @license MIT
+ * @author Igor Sorokin <dspbee@pivasic.com>
+ */
 namespace Dspbee\Bundle\Console;
 
+/**
+ * Console utility.
+ *
+ * Class Controller
+ * @package Dspbee\Bundle\Console
+ */
 class Controller
 {
     public static function process($root)
