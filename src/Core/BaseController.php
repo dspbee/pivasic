@@ -35,6 +35,14 @@ class BaseController
     }
 
     /**
+     * @param Response $response
+     */
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
+    }
+
+    /**
      * Create Response from template.
      *
      * @param string $name
