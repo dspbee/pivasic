@@ -74,15 +74,17 @@ class Wrap
 
         if (!empty($data['trace'])) {
             foreach ($data['trace'] as $k => $item) {
-                switch ($item['type']) {
-                    case '->':
-                        $data['trace'][$k]['type'] = 'method';
-                        break;
-                    case '::':
-                        $data['trace'][$k]['type'] = 'static method';
-                        break;
-                    default:
-                        $data['trace'][$k]['type'] = 'function';
+                if (isset($item['type'])) {
+                    switch ($item['type']) {
+                        case '->':
+                            $data['trace'][$k]['type'] = 'method';
+                            break;
+                        case '::':
+                            $data['trace'][$k]['type'] = 'static method';
+                            break;
+                        default:
+                            $data['trace'][$k]['type'] = 'function';
+                    }
                 }
             }
         }

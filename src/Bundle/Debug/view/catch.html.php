@@ -87,6 +87,8 @@
                         <?= $item['line'] ?>
                     </td>
                 </tr>
+
+                <? if (isset($item['function'])): ?>
                 <tr>
                     <td>
                         Function:
@@ -95,6 +97,9 @@
                         <?= $item['function'] ?>
                     </td>
                 </tr>
+                <? endif ?>
+
+                <? if (isset($item['class'])): ?>
                 <tr>
                     <td>
                         Class:
@@ -103,6 +108,9 @@
                         <?= $item['class'] ?>
                     </td>
                 </tr>
+                <? endif ?>
+
+                <? if (isset($item['type'])): ?>
                 <tr>
                     <td>
                         Type:
@@ -111,6 +119,9 @@
                         <?= $item['type'] ?>
                     </td>
                 </tr>
+                <? endif ?>
+
+                <? if (isset($item['args'])): ?>
                 <tr>
                     <td>
                         Args:
@@ -119,6 +130,7 @@
                         <pre><? print_r($item['args']) ?></pre>
                     </td>
                 </tr>
+                <? endif ?>
             </table>
             <br /><br />
         <? endforeach ?>
