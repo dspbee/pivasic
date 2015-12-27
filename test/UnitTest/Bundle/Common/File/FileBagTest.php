@@ -14,4 +14,10 @@ class FileBagTest extends \PHPUnit_Framework_TestCase
         $_FILES['foo'] = 'bar';
         new FileBag();
     }
+
+    public function testHas()
+    {
+        $file = new FileBag();
+        $this->assertFalse($file->has('test'));
+    }
 }

@@ -29,6 +29,19 @@ class FileBag
     }
 
     /**
+     * Returns true if the FILE parameter is defined.
+     *
+     * @param string $key The key
+     *
+     * @return bool true if the parameter exists, false otherwise
+     */
+    public function has($key)
+    {
+        return array_key_exists($key, $this->bag);
+    }
+
+
+    /**
      * Returns a parameter by name.
      *
      * @param string $key
