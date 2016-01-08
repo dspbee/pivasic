@@ -42,7 +42,7 @@ class Native
      */
     public function getContent($name, array $data = [])
     {
-        $path = $this->packageRoot . '/view/cache/' . str_replace('/', '_', $name);
+        $path = $this->packageRoot . '/view/_cache/' . str_replace('/', '_', $name);
 
         if (!file_exists($path) || !$this->cache) {
             $code = $this->compile($name, true, true);
@@ -78,7 +78,7 @@ class Native
      */
     public function clearCache()
     {
-        $this->removeFromDir($this->packageRoot . '/view/cache');
+        $this->removeFromDir($this->packageRoot . '/view/_cache');
     }
 
     /**
