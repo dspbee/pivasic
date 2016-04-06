@@ -71,7 +71,7 @@ class File extends \SplFileInfo
 
     /**
      * @param $directory
-     * @param null $name
+     * @param string|null $name
      *
      * @return File
      *
