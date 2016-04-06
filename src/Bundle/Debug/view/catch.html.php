@@ -40,15 +40,15 @@
 </head>
 <body>
     <div class="exception">
-        <? if (1 == $code): ?>
+        <?php if (1 == $code): ?>
             <h1>
                 Fatal error
             </h1>
-        <? else: ?>
+        <?php else: ?>
             <h1>
                 Exception detected <? if (!empty($code)): ?>[<?= $code ?>]<? endif ?>
             </h1>
-        <? endif ?>
+        <?php endif ?>
         <table>
             <tr>
                 <td>
@@ -68,7 +68,7 @@
             </tr>
         </table>
         <br /><br /><br />
-        <? foreach ($trace as $k => $item): ?>
+        <?php foreach ($trace as $k => $item): ?>
             <h2>Trace [<?= ($k + 1) ?>]</h2>
             <table>
                 <tr>
@@ -88,7 +88,7 @@
                     </td>
                 </tr>
 
-                <? if (isset($item['function'])): ?>
+                <?php if (isset($item['function'])): ?>
                 <tr>
                     <td>
                         Function:
@@ -97,9 +97,9 @@
                         <?= $item['function'] ?>
                     </td>
                 </tr>
-                <? endif ?>
+                <?php endif ?>
 
-                <? if (isset($item['class'])): ?>
+                <?php if (isset($item['class'])): ?>
                 <tr>
                     <td>
                         Class:
@@ -108,9 +108,9 @@
                         <?= $item['class'] ?>
                     </td>
                 </tr>
-                <? endif ?>
+                <?php endif ?>
 
-                <? if (isset($item['type'])): ?>
+                <?php if (isset($item['type'])): ?>
                 <tr>
                     <td>
                         Type:
@@ -119,9 +119,9 @@
                         <?= $item['type'] ?>
                     </td>
                 </tr>
-                <? endif ?>
+                <?php endif ?>
 
-                <? if (isset($item['args'])): ?>
+                <?php if (isset($item['args'])): ?>
                 <tr>
                     <td>
                         Args:
@@ -130,10 +130,10 @@
                         <pre><? print_r($item['args']) ?></pre>
                     </td>
                 </tr>
-                <? endif ?>
+                <?php endif ?>
             </table>
             <br /><br />
-        <? endforeach ?>
+        <?php endforeach ?>
     </div>
 </body>
 </html>
