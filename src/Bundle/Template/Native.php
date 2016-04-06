@@ -55,6 +55,7 @@ class Native
                 fwrite($fh, $code);
                 flock($fh, LOCK_UN);
             }
+            fflush($fh);
             fclose($fh);
         }
 
