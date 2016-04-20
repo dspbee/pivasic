@@ -96,4 +96,9 @@ class Application
 
         return $response;
     }
+
+    /**
+     * @var null|\mysqli
+     */
+    public static $mysql = null;
 }
