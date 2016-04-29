@@ -13,7 +13,6 @@ class CookieBag extends ValueBag
 {
     public function __construct()
     {
-        parent::__construct([]);
-        $this->bag = &$_COOKIE;
+        parent::__construct(filter_input_array(INPUT_COOKIE));
     }
 }

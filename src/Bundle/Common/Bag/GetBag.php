@@ -13,7 +13,6 @@ class GetBag extends ValueBag
 {
     public function __construct()
     {
-        parent::__construct([]);
-        $this->bag = &$_GET;
+        parent::__construct(filter_input_array(INPUT_GET));
     }
 }
