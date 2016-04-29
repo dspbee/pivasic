@@ -17,9 +17,10 @@ class HeaderBag extends ValueBag
     public function __construct()
     {
         $headers = [];
+        $server = filter_input_array(INPUT_SERVER);
 
         $contentHeaders = ['CONTENT_LENGTH' => true, 'CONTENT_MD5' => true, 'CONTENT_TYPE' => true];
-        foreach ($_SERVER as $key => $value) {
+        foreach ($server as $key => $value) {
             if (0 === strpos($key, 'HTTP_')) {
                 $headers[substr($key, 5)] = $value;
             }
@@ -29,9 +30,9 @@ class HeaderBag extends ValueBag
             }
         }
 
-        if (isset($_SERVER['PHP_AUTH_USER'])) {
-            $headers['PHP_AUTH_USER'] = $_SERVER['PHP_AUTH_USER'];
-            $headers['PHP_AUTH_PW'] = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
+        if (isset($server['PHP_AUTH_USER'])) {
+            $headers['PHP_AUTH_USER'] = $server['PHP_AUTH_USER'];
+            $headers['PHP_AUTH_PW'] = isset($server['PHP_AUTH_PW']) ? $server['PHP_AUTH_PW'] : '';
         } else {
             /*
              * php-cgi under Apache does not pass HTTP Basic user/pass to PHP by default
@@ -48,10 +49,10 @@ class HeaderBag extends ValueBag
              */
 
             $authorizationHeader = null;
-            if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
-                $authorizationHeader = $_SERVER['HTTP_AUTHORIZATION'];
-            } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
-                $authorizationHeader = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+            if (isset($server['HTTP_AUTHORIZATION'])) {
+                $authorizationHeader = $server['HTTP_AUTHORIZATION'];
+            } elseif (isset($server['REDIRECT_HTTP_AUTHORIZATION'])) {
+                $authorizationHeader = $server['REDIRECT_HTTP_AUTHORIZATION'];
             }
 
             if (null !== $authorizationHeader) {
@@ -61,10 +62,10 @@ class HeaderBag extends ValueBag
                     if (count($exploded) == 2) {
                         list($headers['PHP_AUTH_USER'], $headers['PHP_AUTH_PW']) = $exploded;
                     }
-                } elseif (empty($_SERVER['PHP_AUTH_DIGEST']) && (0 === stripos($authorizationHeader, 'digest '))) {
+                } elseif (empty($server['PHP_AUTH_DIGEST']) && (0 === stripos($authorizationHeader, 'digest '))) {
                     // In some circumstances PHP_AUTH_DIGEST needs to be set
                     $headers['PHP_AUTH_DIGEST'] = $authorizationHeader;
-                    $_SERVER['PHP_AUTH_DIGEST'] = $authorizationHeader;
+                    $server['PHP_AUTH_DIGEST'] = $authorizationHeader;
                 } elseif (0 === stripos($authorizationHeader, 'bearer ')) {
                     /*
                      * XXX: Since there is no PHP_AUTH_BEARER in PHP predefined variables,
