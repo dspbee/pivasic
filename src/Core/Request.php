@@ -5,16 +5,6 @@
  */
 namespace Dspbee\Core;
 
-use Dspbee\Bundle\Common\Bag\CookieBag;
-use Dspbee\Bundle\Common\Bag\EnvBag;
-use Dspbee\Bundle\Common\Bag\GetBag;
-use Dspbee\Bundle\Common\Bag\HeaderBag;
-use Dspbee\Bundle\Common\Bag\PostBag;
-use Dspbee\Bundle\Common\Bag\ServerBag;
-use Dspbee\Bundle\Common\Bag\ValueBag;
-use Dspbee\Bundle\Common\File\FileBag;
-use Dspbee\Bundle\Common\Session\Session;
-
 /**
  * Represents a HTTP request.
  *
@@ -44,16 +34,6 @@ class Request
         $this->package = 'Original';
         $this->packageRoute = $packageList['Original'] ?? false;
         $this->route = 'index';
-
-        $this->get = null;
-        $this->post = null;
-        $this->cookie = null;
-        $this->server = null;
-        $this->env = null;
-        $this->session = null;
-        $this->file = null;
-        $this->header = null;
-        $this->data = null;
 
         $url = explode('?', $url);
         $url = $url[0];
@@ -250,127 +230,6 @@ class Request
         return $this->route;
     }
 
-    /**
-     * The query (GET) parameters.
-     *
-     * @return GetBag|null
-     */
-    public function get(): GetBag
-    {
-        if (null === $this->get) {
-            $this->get = new GetBag();
-        }
-        return $this->get;
-    }
-
-    /**
-     * The query (POST) parameters.
-     *
-     * @return PostBag|null
-     */
-    public function post(): PostBag
-    {
-        if (null === $this->post) {
-            $this->post = new PostBag();
-        }
-        return $this->post;
-    }
-
-    /**
-     * The query (COOKIE) parameters.
-     *
-     * @return CookieBag|null
-     */
-    public function cookie(): CookieBag
-    {
-        if (null === $this->cookie) {
-            $this->cookie = new CookieBag();
-        }
-        return $this->cookie;
-    }
-
-    /**
-     * The (SERVER) parameters.
-     *
-     * @return ServerBag|null
-     */
-    public function server(): ServerBag
-    {
-        if (null === $this->server) {
-            $this->server = new ServerBag();
-        }
-        return $this->server;
-    }
-
-    /**
-     * The (ENV) parameters.
-     *
-     * @return EnvBag|null
-     */
-    public function env(): EnvBag
-    {
-        if (null === $this->env) {
-            $this->env = new EnvBag();
-        }
-        return $this->env;
-    }
-
-    /**
-     * Get session handler.
-     *
-     * @return Session|null
-     */
-    public function session(): Session
-    {
-        if (null == $this->session) {
-            $this->session = new Session();
-        }
-        return $this->session;
-    }
-
-    /**
-     * The query (FILES) uploaded files.
-     *
-     * @return FileBag|null
-     */
-    public function file(): FileBag
-    {
-        if (null === $this->file) {
-            $this->file = new FileBag();
-        }
-        return $this->file;
-    }
-
-    /**
-     * HTTP headers from the $_SERVER variable.
-     *
-     * @return HeaderBag|null
-     */
-    public function header(): HeaderBag
-    {
-        if (null === $this->header) {
-            $this->header = new HeaderBag();
-        }
-        return $this->header;
-    }
-
-    /**
-     * Returns the request body content.
-     *
-     * @return ValueBag|null
-     *
-     * @see http://php.net/manual/ru/wrappers.php.php#wrappers.php.input
-     */
-    public function data(): ValueBag
-    {
-        if (null === $this->data) {
-            parse_str(file_get_contents('php://input'), $temp);
-            $this->data = new ValueBag($temp);
-        }
-
-        return $this->data;
-    }
-
     private $method;
 
     private $url;
@@ -380,14 +239,4 @@ class Request
     private $package;
     private $packageRoute;
     private $route;
-
-    private $get;
-    private $post;
-    private $cookie;
-    private $server;
-    private $env;
-    private $session;
-    private $file;
-    private $header;
-    private $data;
 }
