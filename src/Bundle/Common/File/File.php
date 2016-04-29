@@ -48,7 +48,9 @@ class File extends \SplFileInfo
             throw new FileException(sprintf('Could not move the file "%s" to "%s" (%s)', $this->getPathname(), $target, strip_tags($error['message'])));
         }
 
-        @chmod($target, 0666 & ~umask());
+        if (false === @chmod($target, 0666 & ~umask())) {
+            throw new FileException(sprintf('Unable to change mode of the "%s"', $target));
+        }
 
         return $target;
     }
