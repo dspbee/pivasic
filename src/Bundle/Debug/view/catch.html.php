@@ -127,7 +127,7 @@
                         Args:
                     </td>
                     <td>
-                        <pre><? print_r($item['args']) ?></pre>
+                        <pre><?php print_r($item['args']) ?></pre>
                     </td>
                 </tr>
                 <?php endif ?>
