@@ -14,13 +14,15 @@ class FileBag
     /**
      * Initialize bag of FileUpload from $_FILES.
      *
+     * @param array $files super-global array $_FILES
+     *
      * @throws \InvalidArgumentException
      */
-    public function __construct()
+    public function __construct($files)
     {
         $this->bag = [];
 
-        foreach ($_FILES as $key => $file) {
+        foreach ($files as $key => $file) {
             if (!is_array($file) && !$file instanceof FileUpload) {
                 throw new \InvalidArgumentException('An uploaded file must be an array or an instance of FileUpload.');
             }
