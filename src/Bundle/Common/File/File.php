@@ -45,7 +45,7 @@ class File extends \SplFileInfo
 
         if (!@rename($this->getPathname(), $target)) {
             $error = error_get_last();
-            throw new FileException(sprintf('Could not rename the file "%s" to "%s" (%s)', $this->getPathname(), $target, strip_tags($error['message'])));
+            throw new FileException(sprintf('Could not rename the file "%s" (%s)', $this->getPathname(), strip_tags($error['message'])));
         }
 
         if (false === @chmod($target, 0666 & ~umask())) {
