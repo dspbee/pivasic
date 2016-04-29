@@ -187,8 +187,9 @@ class Response
      */
     public function redirect($url = null, $statusCode = 302)
     {
-        if (null === $url && isset($_SERVER['REQUEST_URI'])) {
-            $url = '/' . trim($_SERVER['REQUEST_URI'], '/');
+        $server = filter_input_array(INPUT_SERVER);
+        if (null === $url && isset($server['REQUEST_URI'])) {
+            $url = '/' . trim($server['REQUEST_URI'], '/');
         }
 
         if (headers_sent()) {
