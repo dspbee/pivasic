@@ -46,7 +46,7 @@
             </h1>
         <?php else: ?>
             <h1>
-                Exception detected <? if (!empty($code)): ?>[<?= $code ?>]<? endif ?>
+                Exception detected <?php if (!empty($code)): ?>[<?= $code ?>]<?php endif ?>
             </h1>
         <?php endif ?>
         <table>
