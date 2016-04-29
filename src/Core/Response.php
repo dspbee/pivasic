@@ -185,7 +185,7 @@ class Response
      * @param null|string $url
      * @param int $statusCode
      */
-    function redirect($url = null, $statusCode = 302)
+    public function redirect($url = null, $statusCode = 302)
     {
         if (null === $url && isset($_SERVER['REQUEST_URI'])) {
             $url = '/' . trim($_SERVER['REQUEST_URI'], '/');

@@ -152,10 +152,14 @@ class FileUpload extends File
         }
 
         switch (substr($iniMax, -1)) {
-            case 't': $max *= 1024;
-            case 'g': $max *= 1024;
-            case 'm': $max *= 1024;
-            case 'k': $max *= 1024;
+            case 't':
+                $max *= 1024;
+            case 'g':
+                $max *= 1024;
+            case 'm':
+                $max *= 1024;
+            case 'k':
+                $max *= 1024;
         }
 
         return $max;
