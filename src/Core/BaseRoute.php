@@ -37,7 +37,7 @@ class BaseRoute
         $packageRoot = rtrim($packageRoot, '/');
         $path = $packageRoot . '/Route/' . $request->route() . '/' . $request->method() . '.php';
         if (file_exists($path)) {
-            require $path;
+            $this->loadResource($path);
             $controllerClass = $request->package() . '\\Route_' . str_replace('/', '_', $request->route()) . '\\' . $request->method();
 
             /**
@@ -55,6 +55,11 @@ class BaseRoute
                 $this->response = $controller->getResponse();
             }
         }
+    }
+
+    protected function loadResource($resource)
+    {
+        return require_once $resource;
     }
 
     protected $response;
