@@ -13,6 +13,11 @@ namespace Dspbee\Core;
  */
 class BaseRoute
 {
+    public function __construct()
+    {
+        $this->response = null;
+    }
+
     /**
      * Get object of Response.
      *
@@ -52,8 +57,5 @@ class BaseRoute
         }
     }
 
-    /**
-     * @var Response|null
-     */
-    protected $response = null;
+    protected $response;
 }
