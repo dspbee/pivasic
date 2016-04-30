@@ -15,7 +15,8 @@ class Controller
 {
     public static function process($root)
     {
-        $argv = $_SERVER['argv'];
+        $server = filter_input_array(INPUT_SERVER);
+        $argv = $server['argv'];
         array_shift($argv);
         switch ($argv[0]) {
             case 'cache:clear':
