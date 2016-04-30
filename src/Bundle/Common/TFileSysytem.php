@@ -5,6 +5,10 @@
  */
 namespace Dspbee\Bundle\Common;
 
+/**
+ * Class TFileSystem
+ * @package Dspbee\Bundle\Common
+ */
 trait TFileSystem
 {
     /**
