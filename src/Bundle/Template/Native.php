@@ -95,7 +95,6 @@ class Native
      */
     private function compile($name, $processInclude, $processExtends)
     {
-        $code = null;
         $path = $this->packageRoot . '/view/' . $name;
 
         if (file_exists($path)) {
@@ -105,7 +104,6 @@ class Native
         } else {
             throw new FileNotFoundException($path);
         }
-
 
         if ($processInclude) {
             preg_match_all('/<!-- include (.*) -->/', $code, $matchList);
