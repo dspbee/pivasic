@@ -21,7 +21,7 @@ class BaseRoute
     /**
      * Get object of Response.
      *
-     * @return Response|null.
+     * @return Response|null
      */
     public function getResponse()
     {
