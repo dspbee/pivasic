@@ -6,38 +6,27 @@
 namespace Dspbee\Core;
 
 /**
- * Base functions to custom route.
+ * Base routing.
  *
- * Class BaseRoute
+ * Class DefaultRoute
  * @package Dspbee\Core
  */
-class BaseRoute
+class DefaultRoute
 {
-    public function __construct()
-    {
-        $this->response = null;
-    }
-
     /**
-     * Get object of Response.
+     * DefaultRoute constructor.
      *
-     * @return Response|null
-     */
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
      * @param string $packageRoot
      * @param Request $request
      */
-    public function default($packageRoot, Request $request)
+    public function __construct($packageRoot, Request $request)
     {
+        $this->response = null;
+
         $packageRoot = rtrim($packageRoot, '/');
         $path = $packageRoot . '/Route/' . $request->route() . '/' . $request->method() . '.php';
         if (file_exists($path)) {
-            $this->loadResource($path);
+            require $path;
             $controllerClass = $request->package() . '\\Route_' . str_replace('/', '_', $request->route()) . '\\' . $request->method();
 
             /**
@@ -57,9 +46,14 @@ class BaseRoute
         }
     }
 
-    private function loadResource($resource)
+    /**
+     * Get object of Response.
+     *
+     * @return Response|null
+     */
+    public function getResponse()
     {
-        return require_once $resource;
+        return $this->response;
     }
 
     private $response;

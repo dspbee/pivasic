@@ -63,22 +63,22 @@ class Application
                  */
                 $route = $request->package() . '\\' . $request->packageRoute();
                 /**
-                 * @var BaseRoute $route
+                 * @var DefaultRoute $route
                  */
-                $route = new $route($request);
+                $route = new $route($packageRoot, $request);
                 if (null !== $route->getResponse()) {
                     return $route->getResponse();
                 }
             } else {
                 throw new \RuntimeException(sprintf('The file "%s" does not exist', $path));
             }
-        }  else {
-            $route = new BaseRoute();
-            $route->default($packageRoot, $request);
-            if (null !== $route->getResponse()) {
-                return $route->getResponse();
-            }
         }
+
+        $response = (new DefaultRoute($packageRoot, $request))->getResponse();
+        if (null !== $response) {
+            return $response;
+        }
+
 
         /**
          * If not found.
