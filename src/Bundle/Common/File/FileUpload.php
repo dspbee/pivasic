@@ -189,9 +189,7 @@ class FileUpload extends File
                 throw new FileException(sprintf('Could not move the file "%s" to "%s" (%s)', $this->getPathname(), $target, strip_tags($error['message'])));
             }
 
-            if (!@chmod($target, 0666 & ~umask())) {
-                throw new FileException(sprintf('Unable to change mode of the "%s"', $target));
-            }
+            $this->customChmod($target);
 
             return $target;
         }

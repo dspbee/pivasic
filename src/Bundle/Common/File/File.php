@@ -48,9 +48,7 @@ class File extends \SplFileInfo
             throw new FileException(sprintf('Could not rename the file "%s" (%s)', $this->getPathname(), strip_tags($error['message'])));
         }
 
-        if (false === @chmod($target, 0666 & ~umask())) {
-            throw new FileException(sprintf('Unable to change mode of the "%s"', $target));
-        }
+       $this->customChmod($target);
 
         return $target;
     }
@@ -109,4 +107,20 @@ class File extends \SplFileInfo
 
         return $originalName;
     }
+
+    /**
+     * Chmod function with exception
+     *
+     * @param $target
+     * @param $mode
+     *
+     * @throws FileException
+     */
+    protected function customChmod($target, $mode = 0666)
+    {
+        if (false === @chmod($target, $mode & ~umask())) {
+            throw new FileException(sprintf('Unable to change mode of the "%s"', $target));
+        }
+    }
+
 }
