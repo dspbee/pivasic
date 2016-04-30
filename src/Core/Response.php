@@ -222,8 +222,6 @@ class Response
 </html>', htmlspecialchars($url, ENT_QUOTES, 'UTF-8'));
 
         }
-
-        exit();
     }
 
     private $content;
