@@ -57,10 +57,10 @@ class BaseRoute
         }
     }
 
-    protected function loadResource($resource)
+    private function loadResource($resource)
     {
         return require_once $resource;
     }
 
-    protected $response;
+    private $response;
 }
