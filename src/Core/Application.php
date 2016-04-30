@@ -33,11 +33,11 @@ class Application
          * Register autoload to app/$package/src dir's.
          */
         spl_autoload_register(function ($path) use ($packageRoot) {
-            $packageRoot = rtrim($packageRoot, '/') . '/';
+            $package = rtrim($packageRoot, '/') . '/';
             $path = explode('\\', $path);
-            array_shift($path);                 // Vendor
-            $packageRoot .= array_shift($path); // Package
-            $path = $packageRoot . '/src/' . implode('/', $path) . '.php';
+            array_shift($path);             // Vendor
+            $package .= array_shift($path); // Package
+            $path = $package . '/src/' . implode('/', $path) . '.php';
             if (file_exists($path)) {
                 require_once $path;
             }
