@@ -50,10 +50,9 @@ class BaseController
      */
     public function setTemplate($name, array $data = [])
     {
-        $response = new Response;
+        $this->response = new Response;
         $template = new Native($this->packageRoot, $this->request);
-        $response->setContent($template->getContent($name, $data));
-        $this->response = $response;
+        $this->response->setContent($template->getContent($name, $data));
     }
 
     /**
@@ -63,9 +62,8 @@ class BaseController
      */
     public function setContent($content)
     {
-        $response = new Response();
-        $response->setContent($content);
-        $this->response = $response;
+        $this->response = new Response();
+        $this->response->setContent($content);
     }
 
     /**
@@ -76,8 +74,8 @@ class BaseController
      */
     public function setRedirect($url = null, $statusCode = 302)
     {
-        $response = new Response();
-        $response->redirect($url, $statusCode);
+        $this->response = new Response();
+        $this->response->redirect($url, $statusCode);
     }
 
     protected $packageRoot;
