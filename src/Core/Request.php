@@ -136,17 +136,14 @@ class Request
                 (isset($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS']) ||
                 (isset($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])
             ) {
-                if (empty($controller)) {
-                    $url = 'https://' . $host . '/' . $url;
-                } else {
-                    $url = 'https://' . $host . '/' . $controller . '/' . $url;
-                }
+                $url = 'https://';
             } else {
-                if (empty($controller)) {
-                    $url = 'http://' . $host . '/' . $url;
-                } else {
-                    $url = 'http://' . $host . '/' . $controller . '/' . $url;
-                }
+                $url = 'http://';
+            }
+            if (empty($controller)) {
+                $url .= $host . '/' . $url;
+            } else {
+                $url .= $host . '/' . $controller . '/' . $url;
             }
         } else {
             if (empty($controller)) {
