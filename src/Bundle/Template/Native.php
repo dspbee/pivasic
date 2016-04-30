@@ -5,6 +5,7 @@
  */
 namespace Dspbee\Bundle\Template;
 
+use Dspbee\Bundle\Common\TFileSystem;
 use Dspbee\Bundle\Debug\Wrap;
 use Dspbee\Bundle\Template\Exception\FileNotFoundException;
 use Dspbee\Core\Request;
@@ -15,6 +16,8 @@ use Dspbee\Core\Request;
  */
 class Native
 {
+    use TFileSystem;
+
     /**
      * @param string $packageRoot
      * @param Request|null $request
@@ -79,7 +82,7 @@ class Native
      */
     public function clearCache()
     {
-        $this->removeFromDir($this->packageRoot . '/view/_cache');
+        self::removeFromDir($this->packageRoot . '/view/_cache');
     }
 
     /**
@@ -146,34 +149,6 @@ class Native
         extract($data);
         include $__file__;
         return ob_get_clean();
-    }
-
-    /**
-     * Deleting all subdirectories and files.
-     *
-     * @param string $dir   Path to the directory
-     * @param bool   $self  If true then delete root directory
-     */
-    private function removeFromDir($dir, $self = false)
-    {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ('.' != $object && '..' != $object) {
-                    if ('dir' == filetype($dir . '/' .$object)) {
-                        $this->removeFromDir($dir . '/' . $object, true);
-                    } else {
-                        unlink($dir . '/' . $object);
-                    }
-                }
-            }
-            if ($self) {
-                reset($objects);
-                if (count(scandir($dir)) == 2) {
-                    rmdir($dir);
-                }
-            }
-        }
     }
 
     private $request;

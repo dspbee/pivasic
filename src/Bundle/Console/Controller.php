@@ -4,6 +4,7 @@
  * @author Igor Sorokin <dspbee@pivasic.com>
  */
 namespace Dspbee\Bundle\Console;
+use Dspbee\Bundle\Common\TFileSystem;
 
 /**
  * Console utility.
@@ -13,6 +14,8 @@ namespace Dspbee\Bundle\Console;
  */
 class Controller
 {
+    use TFileSystem;
+
     public static function process($root)
     {
         $server = filter_input_array(INPUT_SERVER);
@@ -35,28 +38,6 @@ class Controller
             default:
                 echo "\nAvailable commands:\n\n";
                 echo "cache:clear\n";
-        }
-    }
-
-    private static function removeFromDir($dir, $self = false)
-    {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ('.' != $object && '..' != $object) {
-                    if ('dir' == filetype($dir . '/' .$object)) {
-                        self::removeFromDir($dir . '/' . $object, true);
-                    } else {
-                        unlink($dir . '/' . $object);
-                    }
-                }
-            }
-            if ($self) {
-                reset($objects);
-                if (count(scandir($dir)) == 2) {
-                    rmdir($dir);
-                }
-            }
         }
     }
 }
