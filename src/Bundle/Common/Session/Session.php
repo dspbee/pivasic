@@ -71,10 +71,16 @@ class Session
         return session_regenerate_id($destroy);
     }
 
+    /**
+     * Destroy session.
+     */
     public function destroy()
     {
-        if (isset($_SESSION)) {
-            $_SESSION = [];
+        session_unset();
+        session_destroy();
+        session_write_close();
+        if (!headers_sent()) {
+            setcookie(session_name(), '', 0, '/');
         }
     }
 
