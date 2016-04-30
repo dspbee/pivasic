@@ -8,7 +8,7 @@ namespace Dspbee\Core;
 /**
  * Base functions to custom route.
  *
- * Class Route
+ * Class BaseRoute
  * @package Dspbee\Core
  */
 class BaseRoute
