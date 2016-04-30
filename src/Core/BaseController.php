@@ -51,8 +51,7 @@ class BaseController
     public function setTemplate($name, array $data = [])
     {
         $this->response = new Response;
-        $template = new Native($this->packageRoot, $this->request);
-        $this->response->setContent($template->getContent($name, $data));
+        $this->response->setContent((new Native($this->packageRoot, $this->request))->getContent($name, $data));
     }
 
     /**
