@@ -4,6 +4,7 @@
  * @author Igor Sorokin <dspbee@pivasic.com>
  */
 namespace Dspbee\Bundle\Console;
+
 use Dspbee\Bundle\Common\TFileSystem;
 
 /**
