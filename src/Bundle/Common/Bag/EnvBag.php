@@ -13,6 +13,10 @@ class EnvBag extends ValueBag
 {
     public function __construct()
     {
-        parent::__construct(filter_input_array(INPUT_ENV));
+        $env = filter_input_array(INPUT_ENV);
+        if (!is_array($env)) {
+            $env = [];
+        }
+        parent::__construct($env);
     }
 }
