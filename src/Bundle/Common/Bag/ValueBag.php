@@ -142,6 +142,20 @@ class ValueBag
     }
 
     /**
+     * Use mysql escape function.
+     *
+     * @param $key
+     * @param \mysqli $db
+     * @param string $default
+     *
+     * @return string
+     */
+    public function fetchEscape($key, \mysqli $db, $default = '')
+    {
+        return $db->real_escape_string($this->fetch($key, $default));
+    }
+
+    /**
      * Returns the number of values.
      *
      * @return int
