@@ -13,6 +13,6 @@ abstract class AlertSuccess extends Alert
 {
     public function __construct()
     {
-        $this->color = 'blue';
+        $this->color = 'green';
     }
 }
