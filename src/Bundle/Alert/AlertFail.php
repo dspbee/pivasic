@@ -13,6 +13,7 @@ abstract class AlertFail extends Alert
 {
     public function __construct()
     {
+        parent::__construct();
         $this->color = 'red';
     }
 }

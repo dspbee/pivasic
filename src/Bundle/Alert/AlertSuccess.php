@@ -13,6 +13,7 @@ abstract class AlertSuccess extends Alert
 {
     public function __construct()
     {
+        parent::__construct();
         $this->color = 'green';
     }
 }

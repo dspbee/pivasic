@@ -13,6 +13,11 @@ namespace Dspbee\Bundle\Alert;
  */
 abstract class Alert
 {
+    public function __construct()
+    {
+        $this->color = 'green';
+    }
+
     /**
      * @param string $message
      *
