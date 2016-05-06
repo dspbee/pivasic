@@ -18,7 +18,7 @@ class Request
      *
      * @param array $languageList
      * @param array $packageList
-     * @param null $url
+     * @param null|string $url
      */
     public function __construct(array $languageList = [], array $packageList = [], $url = null)
     {
