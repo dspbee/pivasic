@@ -25,14 +25,10 @@ class Request
         if (null === $url) {
             $url = $_SERVER['REQUEST_URI'] ?? '';
         }
-
         $this->method = 'GET';
-
-        $this->languageDefault = key($languageList);
+        $this->languageDefault = $languageList[0] ?? '';
         $this->languageCode = '';
-        $this->languageName = '';
         $this->package = 'Original';
-        $this->packageRoute = $packageList['Original'] ?? false;
         $this->route = 'index';
 
         $url = explode('?', $url);
@@ -40,30 +36,40 @@ class Request
         $url = trim(trim($url), '/');
         if ('' !== $url) {
             $partList = explode('/', $url);
+
             /**
              * Delete front controller.
              */
             if (false !== strpos($partList[0], '.php')) {
-                array_shift($partList);
+                unset($partList[0]);
             }
+
             /**
              * Check language.
              */
-            if (isset($partList[0]) && isset($languageList[$partList[0]])) {
-                $this->languageCode = array_shift($partList);
-                $this->languageName = $languageList[$this->languageCode];
+            if (isset($partList[0])) {
+                $key = array_search($partList[0], $languageList);
+                if (false !== $key) {
+                    unset($partList[0]);
+                    $this->languageCode = $languageList[$key];
+                }
             }
+
             /**
              * Check package.
              */
-            if (isset($partList[0]) && isset($packageList[ucfirst($partList[0])])) {
-                $this->package = ucfirst(array_shift($partList));
-                $this->packageRoute = $packageList[$this->package];
+            if (isset($partList[0])) {
+                $key = array_search(ucfirst($partList[0]), $packageList);
+                if (false !== $key) {
+                    unset($partList[0]);
+                    $this->package = $packageList[$key];
+                }
             }
+
             /**
              * Get route.
              */
-            if (count($partList)) {
+            if (isset($partList[0])) {
                 $this->route = implode('/', $partList);
                 $this->route = trim(str_replace('.', '_', $this->route), '/');
             }
@@ -95,6 +101,57 @@ class Request
     {
         return $this->url;
     }
+
+    /**
+     * Request method.
+     *
+     * @return string
+     */
+    public function method()
+    {
+        return $this->method;
+    }
+
+    /**
+     * A default language code.
+     *
+     * @return string
+     */
+    public function languageDefault()
+    {
+        return $this->languageDefault;
+    }
+
+    /**
+     * A language code.
+     *
+     * @return string
+     */
+    public function languageCode()
+    {
+        return $this->languageCode;
+    }
+
+    /**
+     * Name of an app package.
+     *
+     * @return string
+     */
+    public function package()
+    {
+        return $this->package;
+    }
+
+    /**
+     * URL path without front controller, language code, package name and an optional query.
+     *
+     * @return string
+     */
+    public function route()
+    {
+        return $this->route;
+    }
+
 
     /**
      * Create absolute url path or full uri from route.
@@ -156,84 +213,10 @@ class Request
         return $url;
     }
 
-
-    /**
-     * Request method.
-     *
-     * @return string
-     */
-    public function method()
-    {
-        return $this->method;
-    }
-
-    /**
-     * A default language code.
-     *
-     * @return string
-     */
-    public function languageDefault()
-    {
-        return $this->languageDefault;
-    }
-
-    /**
-     * A language code.
-     *
-     * @return string
-     */
-    public function languageCode()
-    {
-        return $this->languageCode;
-    }
-
-    /**
-     * A language name associated with code.
-     *
-     * @return string
-     */
-    public function languageName()
-    {
-        return $this->languageName;
-    }
-
-    /**
-     * Name of an app package.
-     *
-     * @return string
-     */
-    public function package()
-    {
-        return $this->package;
-    }
-
-    /**
-     * Custom routing class or false.
-     *
-     * @return string|bool
-     */
-    public function packageRoute()
-    {
-        return $this->packageRoute;
-    }
-
-    /**
-     * URL path without front controller, language code, package name and an optional query.
-     *
-     * @return string
-     */
-    public function route()
-    {
-        return $this->route;
-    }
-
-    private $method;
-
     private $url;
+    private $method;
     private $languageDefault;
     private $languageCode;
-    private $languageName;
     private $package;
-    private $packageRoute;
     private $route;
 }

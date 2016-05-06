@@ -16,56 +16,69 @@ use Dspbee\Bundle\Template\Native;
 class Application
 {
     /**
-     * Process request.
+     * Application constructor.
      *
      * @param string $packageRoot
      * @param array $languageList
      * @param array $packageList
-     * @param null $url
-     *
-     * @return Response
      */
-    public function run($packageRoot, array $languageList = [], array $packageList = [], $url = null): Response
+    public function __construct($packageRoot, array $languageList = [], array $packageList = [])
     {
-        $request = new Request($languageList, $packageList, $url);
+        $packageRoot = rtrim($packageRoot, '/') . '/';
+
+        self::$packagePath = $packageRoot;
+        self::$languageList = $languageList;
+        self::$packageList = $packageList;
 
         /**
          * Register autoload to app/$package/src dir's.
          */
         spl_autoload_register(function ($path) use ($packageRoot) {
-            $package = rtrim($packageRoot, '/') . '/';
             $path = explode('\\', $path);
-            array_shift($path);             // Vendor
-            $package .= array_shift($path); // Package
+            array_shift($path);                           // Vendor
+            $package = $packageRoot . array_shift($path); // Package
             $path = $package . '/src/' . implode('/', $path) . '.php';
             if (file_exists($path)) {
                 require_once $path;
             }
         });
+    }
 
-        $packageRoot .= $request->package() . '/';
+    /**
+     * Process request.
+     *
+     * @param array $packageClassList
+     * @param null|string $url
+     *
+     * @return Response
+     */
+    public function run(array $packageClassList = [], $url = null): Response
+    {
+        self::$request = new Request(self::$languageList, self::$packageList, $url);
+
+        self::$packagePath .= self::$request->package() . '/';
 
         /**
          * Process request.
          */
-        if (false !== $request->packageRoute()) {
+        if (isset($packageClassList[self::$request->package()])) {
             /**
              * Custom routing.
              */
             /**
              * Path to router class.
              */
-            $path = $packageRoot . $request->packageRoute()  . '.php';
+            $path = self::$packagePath . $packageClassList[self::$request->package()] . '.php';
             if (file_exists($path)) {
                 require $path;
                 /**
                  * Name of router class.
                  */
-                $route = $request->package() . '\\' . $request->packageRoute();
+                $route = self::$request->package() . '\\' .  $packageClassList[self::$request->package()];
                 /**
                  * @var DefaultRoute $route
                  */
-                $route = new $route($packageRoot, $request);
+                $route = new $route(self::$packagePath, self::$request);
                 if (null !== $route->getResponse()) {
                     return $route->getResponse();
                 }
@@ -74,7 +87,7 @@ class Application
             }
         }
 
-        $response = (new DefaultRoute($packageRoot, $request))->getResponse();
+        $response = (new DefaultRoute(self::$packagePath, self::$request))->getResponse();
         if (null !== $response) {
             return $response;
         }
@@ -87,9 +100,8 @@ class Application
         $response->headerStatus(404);
 
         $content = '404 Not Found';
-        if (file_exists($packageRoot . '/view/404.html.php')) {
-            $template = new Native($packageRoot);
-            $content = $template->getContent('404.html.php');
+        if (file_exists(self::$packagePath . '/view/404.html.php')) {
+            $content = (new Native(self::$packagePath))->getContent('404.html.php');
         }
 
         $response->setContent($content);
@@ -97,6 +109,13 @@ class Application
         return $response;
     }
 
+    public static $packagePath = '';
+    public static $languageList = [];
+    public static $packageList = [];
+    /**
+     * @var null|Request
+     */
+    public static $request = null;
     /**
      * @var null|\mysqli
      */
