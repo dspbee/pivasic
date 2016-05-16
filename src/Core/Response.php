@@ -190,11 +190,14 @@ class Response
         $server = filter_input_array(INPUT_SERVER);
         if (null === $url && isset($server['REQUEST_URI'])) {
             $url = '/' . trim($server['REQUEST_URI'], '/');
-            $url = filter_var($url, FILTER_VALIDATE_URL);
+        }
+        $url = filter_var($url, FILTER_VALIDATE_URL);
+
+        if (!headers_sent()) {
+            header('Location: ' . $url, true, $statusCode);
         }
 
-        if (headers_sent()) {
-            echo sprintf('<!DOCTYPE html>
+        echo sprintf('<!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8" />
@@ -207,22 +210,6 @@ class Response
     </body>
 </html>', htmlspecialchars($url, ENT_QUOTES, 'UTF-8'));
 
-        } else {
-            header('Location: ' . $url, true, $statusCode);
-
-            echo sprintf('<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="refresh" content="1;url=%1$s" />
-        <title>Redirecting to %1$s</title>
-    </head>
-    <body>
-        Redirecting to <a href="%1$s">%1$s</a>.
-    </body>
-</html>', htmlspecialchars($url, ENT_QUOTES, 'UTF-8'));
-
-        }
     }
 
     private $content;
