@@ -39,7 +39,7 @@ class DefaultRoute
                  * Call handler.
                  */
                 $handler = $_POST['handler'] ?? $_GET['handler'] ?? 'index';
-                if (preg_match('/^[\\a-zA-Z0-9_-]*$/iD', $handler)) {
+                if (preg_match('/^[a-zA-Z0-9_-]*$/iD', $handler)) {
                     if (method_exists($controllerClass, $handler)) {
                         $controller->$handler();
                         $this->response = $controller->getResponse();
