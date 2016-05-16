@@ -190,7 +190,8 @@ class Response
         $server = filter_input_array(INPUT_SERVER);
         if (null === $url && isset($server['REQUEST_URI'])) {
             $url = '/' . trim($server['REQUEST_URI'], '/');
-            $url = str_replace("\r\n", '', $url);
+            preg_match('/^[\\a-zA-Z0-9-\._~:\/\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=%]*$/iD', $url, $match);
+            $url = $match[1] ?? '';
         }
         $url = filter_var($url, FILTER_VALIDATE_URL);
 
