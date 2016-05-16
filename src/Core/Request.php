@@ -47,23 +47,17 @@ class Request
             /**
              * Check language.
              */
-            if (isset($partList[0])) {
-                $key = array_search($partList[0], $languageList);
-                if (false !== $key) {
-                    unset($partList[0]);
-                    $this->languageCode = $languageList[$key];
-                }
+            if (isset($partList[0]) && false !== ($key = array_search($partList[0], $languageList))) {
+                unset($partList[0]);
+                $this->languageCode = $languageList[$key];
             }
 
             /**
              * Check package.
              */
-            if (isset($partList[0])) {
-                $key = array_search(ucfirst($partList[0]), $packageList);
-                if (false !== $key) {
-                    unset($partList[0]);
-                    $this->package = $packageList[$key];
-                }
+            if (isset($partList[0]) && false !== ($key = array_search(ucfirst($partList[0]), $packageList))) {
+                unset($partList[0]);
+                $this->package = $packageList[$key];
             }
 
             /**

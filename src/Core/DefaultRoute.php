@@ -29,7 +29,9 @@ class DefaultRoute
             require $path;
             $controllerClass = $request->package() . '\\Route_' . str_replace('/', '_', $request->route()) . '\\' . $request->method();
 
-            if (preg_match('/^[\\a-zA-Z0-9_-]*$/iD', $controllerClass)) {
+            preg_match('/^[\\a-zA-Z0-9_-]*$/iD', $controllerClass, $match);
+            if (isset($match[0])) {
+                $controllerClass = $match[0];
                 /**
                  * @var BaseController $controller
                  */
@@ -39,7 +41,9 @@ class DefaultRoute
                  * Call handler.
                  */
                 $handler = $_POST['handler'] ?? $_GET['handler'] ?? 'index';
-                if (preg_match('/^[a-zA-Z0-9_-]*$/iD', $handler)) {
+                preg_match('/^[a-zA-Z0-9_-]*$/iD', $handler, $match);
+                if (isset($match[0])) {
+                    $handler = $match[0];
                     if (method_exists($controllerClass, $handler)) {
                         $controller->$handler();
                         $this->response = $controller->getResponse();
