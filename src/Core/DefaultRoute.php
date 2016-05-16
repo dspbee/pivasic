@@ -29,19 +29,22 @@ class DefaultRoute
             require $path;
             $controllerClass = $request->package() . '\\Route_' . str_replace('/', '_', $request->route()) . '\\' . $request->method();
 
-            /**
-             * @var BaseController $controller
-             */
-            $controller = new $controllerClass($packageRoot, $request);
+            if (preg_match('/^[\\a-zA-Z0-9_-]*$/iD', $controllerClass)) {
+                /**
+                 * @var BaseController $controller
+                 */
+                $controller = new $controllerClass($packageRoot, $request);
 
-            /**
-             * Call handler.
-             */
-            $handler = $_POST['handler'] ?? $_GET['handler'] ?? 'index';
-            $handler = str_replace('.', '', $handler);
-            if (method_exists($controllerClass, $handler)) {
-                $controller->$handler();
-                $this->response = $controller->getResponse();
+                /**
+                 * Call handler.
+                 */
+                $handler = $_POST['handler'] ?? $_GET['handler'] ?? 'index';
+                if (preg_match('/^[\\a-zA-Z0-9_-]*$/iD', $handler)) {
+                    if (method_exists($controllerClass, $handler)) {
+                        $controller->$handler();
+                        $this->response = $controller->getResponse();
+                    }
+                }
             }
         }
     }
