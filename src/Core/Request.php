@@ -41,16 +41,14 @@ class Request
              * Delete front controller.
              */
             if (false !== strpos($partList[0], '.php')) {
-                unset($partList[0]);
-                $partList = array_values($partList);
+                $partList = $this->unset0($partList);
             }
 
             /**
              * Check language.
              */
             if (isset($partList[0]) && false !== ($key = array_search($partList[0], $languageList))) {
-                unset($partList[0]);
-                $partList = array_values($partList);
+                $partList = $this->unset0($partList);
                 $this->languageCode = $languageList[$key];
             }
 
@@ -58,8 +56,7 @@ class Request
              * Check package.
              */
             if (isset($partList[0]) && false !== ($key = array_search(ucfirst($partList[0]), $packageList))) {
-                unset($partList[0]);
-                $partList = array_values($partList);
+                $partList = $this->unset0($partList);
                 $this->package = $packageList[$key];
             }
 
@@ -207,6 +204,19 @@ class Request
         }
 
         return $url;
+    }
+
+    /**
+     * Delete first element and reordering array.
+     *
+     * @param array $partList
+     *
+     * @return array
+     */
+    private function unset0(array $partList)
+    {
+        unset($partList[0]);
+        return array_values($partList);
     }
 
     private $url;
