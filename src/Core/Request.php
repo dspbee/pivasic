@@ -42,6 +42,7 @@ class Request
              */
             if (false !== strpos($partList[0], '.php')) {
                 unset($partList[0]);
+                $partList = array_values($partList);
             }
 
             /**
@@ -49,6 +50,7 @@ class Request
              */
             if (isset($partList[0]) && false !== ($key = array_search($partList[0], $languageList))) {
                 unset($partList[0]);
+                $partList = array_values($partList);
                 $this->languageCode = $languageList[$key];
             }
 
@@ -57,6 +59,7 @@ class Request
              */
             if (isset($partList[0]) && false !== ($key = array_search(ucfirst($partList[0]), $packageList))) {
                 unset($partList[0]);
+                $partList = array_values($partList);
                 $this->package = $packageList[$key];
             }
 
@@ -183,18 +186,17 @@ class Request
             } else if (isset($_SERVER['SERVER_NAME'])) {
                 $host = $_SERVER['SERVER_NAME'];
             }
+            $protocol = 'http://';
             if (
                 (isset($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS']) ||
                 (isset($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])
             ) {
-                $url = 'https://';
-            } else {
-                $url = 'http://';
+                $protocol = 'https://';
             }
             if (empty($controller)) {
-                $url .= $host . '/' . $url;
+                $url = $protocol . $host . '/' . $url;
             } else {
-                $url .= $host . '/' . $controller . '/' . $url;
+                $url = $protocol . $host . '/' . $controller . '/' . $url;
             }
         } else {
             if (empty($controller)) {

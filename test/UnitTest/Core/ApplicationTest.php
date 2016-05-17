@@ -7,8 +7,8 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 {
     public function testApp()
     {
-        $app = new Application();
-        $this->assertInstanceOf('Dspbee\Core\Response', $app->run(''));
-        $this->assertEquals('404 Not Found', $app->run('')->getContent());
+        $app = new Application('');
+        $this->assertInstanceOf('Dspbee\Core\Response', $app->run());
+        $this->assertEquals('404 Not Found', $app->run()->getContent());
     }
 }

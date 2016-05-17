@@ -6,7 +6,7 @@
 namespace Dspbee\Bundle\Common;
 
 /**
- * Class TFileSystem
+ * Trait TFileSystem
  * @package Dspbee\Bundle\Common
  */
 trait TFileSystem
@@ -32,7 +32,7 @@ trait TFileSystem
             }
             if ($self) {
                 reset($objects);
-                if (count(scandir($dir)) == 2) {
+                if (2 == count(scandir($dir))) {
                     rmdir($dir);
                 }
             }

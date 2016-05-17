@@ -12,12 +12,12 @@ class FileBagTest extends \PHPUnit_Framework_TestCase
     public function testInvalidArgumentException()
     {
         $_FILES['foo'] = 'bar';
-        new FileBag();
+        new FileBag($_FILES);
     }
 
     public function testHas()
     {
-        $file = new FileBag();
+        $file = new FileBag([]);
         $this->assertFalse($file->has('test'));
     }
 }
