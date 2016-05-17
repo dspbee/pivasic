@@ -11,7 +11,7 @@ namespace Dspbee\Core;
  * Class DefaultRoute
  * @package Dspbee\Core
  */
-class DefaultRoute
+class DefaultRoute implements IRoute
 {
     /**
      * DefaultRoute constructor.
