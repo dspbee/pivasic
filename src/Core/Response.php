@@ -193,7 +193,6 @@ class Response
             preg_match('/^[\\a-zA-Z0-9-\._~:\/\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=%]*$/iD', $url, $match);
             $url = $match[1] ?? '';
         }
-        $url = filter_var($url, FILTER_VALIDATE_URL);
 
         if (!headers_sent()) {
             header('Location: ' . $url, true, $statusCode);
