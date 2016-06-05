@@ -73,7 +73,7 @@ class Application
                  */
                 $route = $request->package() . '\\' .  $routeClassList[$request->package()];
                 /**
-                 * @var DefaultRoute $route
+                 * @var IRoute $route
                  */
                 $route = new $route();
                 $response = $route->getResponse($this->packagePath, $request);
@@ -85,7 +85,7 @@ class Application
             }
         }
 
-        $response = (new DefaultRoute($this->packagePath, $request))->getResponse($this->packagePath, $request);
+        $response = (new DefaultRoute())->getResponse($this->packagePath, $request);
         if (null !== $response) {
             return $response;
         }
