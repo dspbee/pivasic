@@ -12,17 +12,12 @@ namespace Dspbee\Core;
 interface IRoute
 {
     /**
-     * IRoute constructor.
+     * Get object of Response.
      *
      * @param string $packageRoot
      * @param Request $request
-     */
-    public function __construct($packageRoot, Request $request);
-
-    /**
-     * Get object of Response.
      *
      * @return Response|null
      */
-    public function getResponse();
+    public function getResponse($packageRoot, Request $request);
 }

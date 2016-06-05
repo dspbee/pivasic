@@ -14,15 +14,15 @@ namespace Dspbee\Core;
 class DefaultRoute implements IRoute
 {
     /**
-     * DefaultRoute constructor.
+     * Get object of Response.
      *
      * @param string $packageRoot
      * @param Request $request
+     *
+     * @return Response|null
      */
-    public function __construct($packageRoot, Request $request)
+    public function getResponse($packageRoot, Request $request)
     {
-        $this->response = null;
-
         $packageRoot = rtrim($packageRoot, '/');
         $path = $packageRoot . '/Route/' . $request->route() . '/' . $request->method() . '.php';
         if (file_exists($path)) {
@@ -46,22 +46,12 @@ class DefaultRoute implements IRoute
                     $handler = $match[0];
                     if (method_exists($controllerClass, $handler)) {
                         $controller->$handler();
-                        $this->response = $controller->getResponse();
+                        return $controller->getResponse();
                     }
                 }
             }
         }
-    }
 
-    /**
-     * Get object of Response.
-     *
-     * @return Response|null
-     */
-    public function getResponse()
-    {
-        return $this->response;
+        return null;
     }
-
-    private $response;
 }

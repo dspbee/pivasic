@@ -8,8 +8,7 @@ class DefaultRouteTest extends \PHPUnit_Framework_TestCase
 {
     public function testRoute()
     {
-        $route = new DefaultRoute('', new Request());
-
-        $this->assertNull($route->getResponse());
+        $route = new DefaultRoute();
+        $this->assertNull($route->getResponse('', new Request()));
     }
 }
