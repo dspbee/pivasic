@@ -23,7 +23,7 @@ class Application
     public function __construct($appRoot)
     {
         $appRoot = rtrim($appRoot, '/') . '/';
-        $this->packagePath = $appRoot;
+        $this->packageRoot = $appRoot;
 
         /**
          * Register autoload to app/$package/src dir's.
@@ -53,7 +53,7 @@ class Application
     {
         $request = new Request($languageList, $packageList, $url);
 
-        $this->packagePath .= $request->package() . '/';
+        $this->packageRoot .= $request->package() . '/';
 
         /**
          * Process request.
@@ -65,7 +65,7 @@ class Application
             /**
              * Path to router class.
              */
-            $path = $this->packagePath . $routeClassList[$request->package()] . '.php';
+            $path = $this->packageRoot . $routeClassList[$request->package()] . '.php';
             if (file_exists($path)) {
                 require $path;
                 /**
@@ -76,7 +76,7 @@ class Application
                  * @var IRoute $route
                  */
                 $route = new $route();
-                $response = $route->getResponse($this->packagePath, $request);
+                $response = $route->getResponse($this->packageRoot, $request);
                 if (null !== $response) {
                     return $response;
                 }
@@ -85,7 +85,7 @@ class Application
             }
         }
 
-        $response = (new DefaultRoute())->getResponse($this->packagePath, $request);
+        $response = (new DefaultRoute())->getResponse($this->packageRoot, $request);
         if (null !== $response) {
             return $response;
         }
@@ -98,8 +98,8 @@ class Application
         $response->headerStatus(404);
 
         $content = '404 Not Found';
-        if (file_exists($this->packagePath . '/view/404.html.php')) {
-            $content = (new Native($this->packagePath))->getContent('404.html.php');
+        if (file_exists($this->packageRoot . '/view/404.html.php')) {
+            $content = (new Native($this->packageRoot))->getContent('404.html.php');
         }
 
         $response->setContent($content);
@@ -107,5 +107,5 @@ class Application
         return $response;
     }
 
-    private $packagePath;
+    private $packageRoot;
 }
