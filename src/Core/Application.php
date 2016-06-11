@@ -18,20 +18,20 @@ class Application
     /**
      * Application constructor.
      *
-     * @param string $packageRoot
+     * @param string $appRoot
      */
-    public function __construct($packageRoot)
+    public function __construct($appRoot)
     {
-        $packageRoot = rtrim($packageRoot, '/') . '/';
-        $this->packagePath = $packageRoot;
+        $appRoot = rtrim($appRoot, '/') . '/';
+        $this->packagePath = $appRoot;
 
         /**
          * Register autoload to app/$package/src dir's.
          */
-        spl_autoload_register(function ($path) use ($packageRoot) {
+        spl_autoload_register(function ($path) use ($appRoot) {
             $path = explode('\\', $path);
             array_shift($path);                           // Vendor
-            $package = $packageRoot . array_shift($path); // Package
+            $package = $appRoot . array_shift($path); // Package
             $path = $package . '/src/' . implode('/', $path) . '.php';
             if (file_exists($path)) {
                 require_once $path;
