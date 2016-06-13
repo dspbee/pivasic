@@ -98,7 +98,7 @@ class Response
      *
      * @param integer $statusCode  - status
      * @param string $version      - HTTP version
-     * @param null $statusText     - status text
+     * @param string|null $statusText     - status text
      *
      * @return bool
      */
