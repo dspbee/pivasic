@@ -28,27 +28,18 @@ class DefaultRoute implements IRoute
         if (file_exists($path)) {
             require $path;
             $controllerClass = $request->package() . '\\Route_' . str_replace('/', '_', $request->route()) . '\\' . $request->method();
+            /**
+             * @var BaseController $controller
+             */
+            $controller = new $controllerClass($packageRoot, $request);
 
-            preg_match('/^[\\a-zA-Z0-9_-]*$/iD', $controllerClass, $match);
-            if (isset($match[0])) {
-                $controllerClass = $match[0];
-                /**
-                 * @var BaseController $controller
-                 */
-                $controller = new $controllerClass($packageRoot, $request);
-
-                /**
-                 * Call handler.
-                 */
-                $handler = $_POST['handler'] ?? $_GET['handler'] ?? 'index';
-                preg_match('/^[a-zA-Z0-9_-]*$/iD', $handler, $match);
-                if (isset($match[0])) {
-                    $handler = $match[0];
-                    if (method_exists($controllerClass, $handler)) {
-                        $controller->$handler();
-                        return $controller->getResponse();
-                    }
-                }
+            /**
+             * Call handler.
+             */
+            $handler = $_POST['handler'] ?? $_GET['handler'] ?? 'index';
+            if (preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $handler) && method_exists($controllerClass, $handler)) {
+                $controller->$handler();
+                return $controller->getResponse();
             }
         }
 

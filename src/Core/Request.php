@@ -80,7 +80,7 @@ class Request
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 'xmlhttprequest' == strtolower($_SERVER['HTTP_X_REQUESTED_WITH'])) {
             $this->method = 'AJAX';
         } else {
-            if (isset($_SERVER['REQUEST_METHOD'])) {
+            if (isset($_SERVER['REQUEST_METHOD']) && in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST', 'OPTIONS', 'HEAD', 'PUT', 'DELETE', 'TRACE', 'CONNECT'])) {
                 $this->method = $_SERVER['REQUEST_METHOD'];
             }
         }
