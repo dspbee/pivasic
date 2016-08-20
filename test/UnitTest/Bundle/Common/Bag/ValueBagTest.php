@@ -115,6 +115,15 @@ class ValueBagTest extends \PHPUnit_Framework_TestCase
     {
         $this->bag->add([$key => $value]);
         $this->assertEquals($value, $this->bag->fetch($key));
+
+
+        $bag = new ValueBag(['key' => 'foo']);
+        $this->assertEquals('foo', $bag->fetch('key'));
+        $this->assertNotEquals('foo ', $bag->fetch('key'));
+
+        $bag = new ValueBag(['key' => 'foo ']);
+        $this->assertEquals('foo', $bag->fetch('key'));
+        $this->assertNotEquals('foo ', $bag->fetch('key'));
     }
 
     /**

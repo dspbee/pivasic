@@ -59,7 +59,7 @@ class ValueBag
      */
     public function fetch($key, $default = null)
     {
-        return $this->bag[$key] ?? $default;
+        return trim($this->bag[$key] ?? $default);
     }
 
     /**
