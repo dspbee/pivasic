@@ -31,4 +31,18 @@ trait TDataInit
             }
         }
     }
+
+    /**
+     * Init class members from $_POST array.
+     *
+     * @param null $callback
+     */
+    public function initFromPost($callback = null)
+    {
+        $input = $_POST;
+        if (null !== $callback) {
+            $input = array_map($callback, $input);
+        }
+        $this->initFromArray($input);
+    }
 }
