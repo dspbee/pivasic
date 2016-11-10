@@ -73,8 +73,8 @@ class MimeType
     {
         $this->guessers = [];
 
-        if (FileinfoMimeType::isSupported()) {
-            $this->guessers[] = new FileinfoMimeType();
+        if (FileInfoMimeType::isSupported()) {
+            $this->guessers[] = new FileInfoMimeType();
         }
         if (BinaryMimeType::isSupported()) {
             $this->guessers[] = new BinaryMimeType();
