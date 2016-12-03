@@ -62,7 +62,9 @@ class Wrap
      */
     public static function render($code, $message, $file, $line, $context = null, array $backtrace = [])
     {
-        ob_clean();
+        if (ob_get_length()) {
+            ob_clean();
+        }
         $data = [
             'message' => $message,
             'code' => $code,
