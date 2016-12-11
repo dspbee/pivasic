@@ -38,7 +38,6 @@ class DefaultRoute implements IRoute
              * Call handler.
              */
             $handler = $_POST['handler'] ?? $_GET['handler'] ?? 'index';
-            // preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $handler) &&
             if (method_exists($controllerClass, $handler)) {
                 $controller->$handler();
                 return $controller->getResponse();
