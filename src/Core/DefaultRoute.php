@@ -24,7 +24,8 @@ class DefaultRoute implements IRoute
     public function getResponse($packageRoot, Request $request)
     {
         $packageRoot = rtrim($packageRoot, '/');
-        $path = $packageRoot . '/Route/' . $request->route() . '/' . $request->method() . '.php';
+        $route = preg_replace('/\/\d+/u', '/D', $request->route());
+        $path = $packageRoot . '/Route/' . $route . '/' . $request->method() . '.php';
         if (file_exists($path)) {
             require $path;
             $controllerClass = $request->package() . '\\Route_' . str_replace('/', '_', $request->route()) . '\\' . $request->method();
@@ -37,7 +38,8 @@ class DefaultRoute implements IRoute
              * Call handler.
              */
             $handler = $_POST['handler'] ?? $_GET['handler'] ?? 'index';
-            if (preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $handler) && method_exists($controllerClass, $handler)) {
+            // preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $handler) && 
+            if (method_exists($controllerClass, $handler)) {
                 $controller->$handler();
                 return $controller->getResponse();
             }
