@@ -39,7 +39,7 @@ trait TDataInit
      */
     public function initFromPost($callback = null)
     {
-        $input = $_POST;
+        $input = filter_input_array(INPUT_POST);
         if (null !== $callback) {
             $input = array_map($callback, $input);
         }
