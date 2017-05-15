@@ -32,15 +32,21 @@ class DefaultRoute implements IRoute
             /**
              * @var BaseController $controller
              */
-            $controller = new $controllerClass($packageRoot, $request);
+            if (preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $controllerClass) && class_exists($controllerClass)) {
+                $controller = new $controllerClass($packageRoot, $request);
+            } else {
+                throw new \RuntimeException(sprintf('The class "%s" does not exist', $controllerClass));
+            }
 
             /**
              * Call handler.
              */
-            $handler = $_POST['handler'] ?? $_GET['handler'] ?? 'index';
-            if (method_exists($controllerClass, $handler)) {
+            $handler = filter_input_array(INPUT_POST)['handler'] ?? filter_input_array(INPUT_GET)['handler'] ?? 'index';
+            if (preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $handler) && method_exists($controllerClass, $handler)) {
                 $controller->$handler();
                 return $controller->getResponse();
+            } else {
+                throw new \RuntimeException(sprintf('The method "%s" does not exist', $handler));
             }
         }
 
