@@ -64,8 +64,7 @@ class Request
              * Get route.
              */
             if (isset($partList[0])) {
-                $this->route = implode('/', $partList);
-                $this->route = trim(str_replace('.', '_', $this->route), '/');
+                $this->route = trim(str_replace('.', '_', implode('/', $partList)), '/');
             }
         }
 
