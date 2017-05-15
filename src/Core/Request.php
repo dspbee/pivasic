@@ -23,7 +23,7 @@ class Request
     public function __construct(array $languageList = [], array $packageList = [], $url = null)
     {
         if (null === $url) {
-            $url = $_SERVER['REQUEST_URI'] ?? '';
+            $url = filter_input_array(INPUT_SERVER)['REQUEST_URI'] ?? '';
         }
         $this->method = 'GET';
         $this->languageDefault = $languageList[0] ?? '';
