@@ -27,6 +27,7 @@ class Native
     {
         $this->packageRoot = rtrim($packageRoot, '/');
         $this->request = $request;
+        $this->routeView = false;
 
         if (class_exists('Dspbee\Bundle\Debug\Wrap')) {
             $this->cache = !Wrap::$debugEnabled;
@@ -45,6 +46,13 @@ class Native
      */
     public function getContent($name, array $data = [])
     {
+        if (false === strpos($name, '.')) {
+            if (!empty($name)) {
+                $name = '.' . $name;
+            }
+            $name = 'view' . $name . '.html.php';
+            $this->routeView = true;
+        }
         $path = $this->packageRoot . '/view/_cache/' . str_replace('/', '_', $name);
 
         if (!file_exists($path) || !$this->cache) {
@@ -78,6 +86,22 @@ class Native
     }
 
     /**
+     * Use cache.
+     */
+    public function enableCache()
+    {
+        $this->cache = true;
+    }
+
+    /**
+     * Render without cache.
+     */
+    public function disableCache()
+    {
+        $this->cache = false;
+    }
+
+    /**
      * Delete all cached templates.
      */
     public function clearCache()
@@ -98,7 +122,19 @@ class Native
      */
     private function compile($name, $processInclude, $processExtends)
     {
-        $path = $this->packageRoot . '/view/' . $name;
+        if ($this->routeView) {
+            $this->routeView = false;
+            $path = '';
+            $stack = debug_backtrace();
+            foreach ($stack as $item) {
+                if (false !== stripos($item['file'], '\\Route\\')) {
+                    $path = pathinfo($item['file'], PATHINFO_DIRNAME) . '/' . $name;
+                    break;
+                }
+            }
+        } else {
+            $path = $this->packageRoot . '/view/' . $name;
+        }
 
         if (file_exists($path)) {
             ob_start();
@@ -154,5 +190,6 @@ class Native
     private $request;
     private $packageRoot;
     private $cache;
+    private $routeView;
 }
 

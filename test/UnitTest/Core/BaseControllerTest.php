@@ -13,7 +13,7 @@ class BaseProcessTest extends \PHPUnit_Framework_TestCase
     public function testSetTemplate()
     {
         $controller =  new BaseController('', new Request());
-        $controller->setTemplate('test');
+        $controller->setView('test');
     }
 
     public function testSetContent()

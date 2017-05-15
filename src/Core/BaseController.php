@@ -48,7 +48,7 @@ class BaseController
      * @param string $name
      * @param array $data
      */
-    public function setTemplate($name, array $data = [])
+    public function setView($name = '', array $data = [])
     {
         $this->response = new Response;
         $this->response->setContent((new Native($this->packageRoot, $this->request))->getContent($name, $data));
@@ -71,7 +71,7 @@ class BaseController
      * @param null $url
      * @param int $statusCode
      */
-    public function setRedirect($url = null, $statusCode = 302)
+    public function setRedirect($url = null, $statusCode = 307)
     {
         $this->response = new Response();
         $this->response->redirect($url, $statusCode);
