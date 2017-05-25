@@ -71,7 +71,7 @@ class BaseController
      * @param null $url
      * @param int $statusCode
      */
-    public function setRedirect($url = null, $statusCode = 307)
+    public function setRedirect($url = null, $statusCode = 303)
     {
         $this->response = new Response();
         $this->response->redirect($url, $statusCode);
