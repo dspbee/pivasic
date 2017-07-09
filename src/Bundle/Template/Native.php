@@ -127,7 +127,7 @@ class Native
             $path = '';
             $stack = debug_backtrace();
             foreach ($stack as $item) {
-                if (false !== stripos($item['file'], '\\Route\\')) {
+                if (false !== stripos($item['file'], DIRECTORY_SEPARATOR . 'Route' . DIRECTORY_SEPARATOR)) {
                     $path = pathinfo($item['file'], PATHINFO_DIRNAME) . '/' . $name;
                     break;
                 }
