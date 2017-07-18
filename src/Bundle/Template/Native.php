@@ -46,14 +46,25 @@ class Native
      */
     public function getContent($name, array $data = [])
     {
+        $cacheName = $name;
         if (false === strpos($name, '.')) {
             if (!empty($name)) {
                 $name = '.' . $name;
             }
             $name = 'view' . $name . '.html.php';
             $this->routeView = true;
+
+            $stack = debug_backtrace();
+            foreach ($stack as $item) {
+                if (false !== stripos($item['file'], DIRECTORY_SEPARATOR . 'Route' . DIRECTORY_SEPARATOR)) {
+                    $cacheName = pathinfo($item['file'], PATHINFO_DIRNAME) . '/' . $name;
+                    $cacheName = explode('Route' . DIRECTORY_SEPARATOR, $cacheName)[1];
+                    $cacheName = str_replace(['/', '\\'], '_', $cacheName);
+                    break;
+                }
+            }
         }
-        $path = $this->packageRoot . '/view/_cache/' . str_replace('/', '_', $name);
+        $path = $this->packageRoot . '/view/_cache/' . str_replace('/', '_', $cacheName);
 
         if (!file_exists($path) || !$this->cache) {
             $code = $this->compile($name, true, true);
