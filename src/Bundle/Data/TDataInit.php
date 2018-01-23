@@ -45,4 +45,19 @@ trait TDataInit
         }
         $this->initFromArray($input);
     }
+
+    /**
+     * Get item property.
+     *
+     * @param $name
+     * @param $argumentList
+     * @return null
+     */
+    public function __call($name, $argumentList)
+    {
+        if (property_exists(get_called_class(), $name)) {
+            return $this->$name;
+        }
+        return null;
+    }
 }
