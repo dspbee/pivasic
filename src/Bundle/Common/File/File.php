@@ -1,26 +1,24 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Bundle\Common\File;
+namespace Pivasic\Bundle\Common\File;
 
-use Dspbee\Bundle\Common\File\Exception\FileException;
-use Dspbee\Bundle\Common\File\Exception\FileNotFoundException;
-use Dspbee\Bundle\Common\File\Extension\Extension;
-use Dspbee\Bundle\Common\File\MimeType\MimeType;
+use Pivasic\Bundle\Common\File\Exception\FileException;
+use Pivasic\Bundle\Common\File\Exception\FileNotFoundException;
+use Pivasic\Bundle\Common\File\Extension\Extension;
+use Pivasic\Bundle\Common\File\MimeType\MimeType;
 
 /**
  * Class File
- * @package Dspbee\Bundle\Common\File
+ * @package Pivasic\Bundle\Common\File
  */
 class File extends \SplFileInfo
 {
     /**
      * @param string $path      The path to the file
      * @param bool   $checkPath Whether to check the path or not
-     *
-     * @throws FileNotFoundException If the given path is not a file
+     * @throws FileNotFoundException
      */
     public function __construct($path, $checkPath = true)
     {
@@ -32,8 +30,26 @@ class File extends \SplFileInfo
     }
 
     /**
-     * @param string $directory
-     * @param string|null $name
+     * @return string|null
+     */
+    public function guessExtension()
+    {
+        return Extension::getInstance()->guess($this->guessMimeType());
+    }
+
+    /**
+     * @return string|null
+     */
+    public function guessMimeType()
+    {
+        return MimeType::getInstance()->guess($this->getPathname());
+    }
+
+    /**
+     * Moves the file to a new location.
+     *
+     * @param string $directory   Destination folder
+     * @param string|null $name   New file name
      *
      * @return File
      *
@@ -51,22 +67,6 @@ class File extends \SplFileInfo
        $this->customChmod($target);
 
         return $target;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function guessExtension()
-    {
-        return Extension::getInstance()->guess($this->guessMimeType());
-    }
-
-    /**
-     * @return string|null
-     */
-    public function guessMimeType()
-    {
-        return MimeType::getInstance()->guess($this->getPathname());
     }
 
     /**
@@ -93,22 +93,6 @@ class File extends \SplFileInfo
     }
 
     /**
-     * Returns locale independent base name of the given path.
-     *
-     * @param string $name The new file name
-     *
-     * @return string containing
-     */
-    protected function getName($name)
-    {
-        $originalName = str_replace('\\', '/', $name);
-        $pos = strrpos($originalName, '/');
-        $originalName = false === $pos ? $originalName : substr($originalName, $pos + 1);
-
-        return $originalName;
-    }
-
-    /**
      * Chmod function with exception
      *
      * @param $target
@@ -123,4 +107,19 @@ class File extends \SplFileInfo
         }
     }
 
+    /**
+     * Returns locale independent base name of the given path.
+     *
+     * @param string $name The new file name
+     *
+     * @return string containing
+     */
+    protected function getName($name)
+    {
+        $originalName = str_replace('\\', '/', $name);
+        $pos = strrpos($originalName, '/');
+        $originalName = false === $pos ? $originalName : substr($originalName, $pos + 1);
+
+        return $originalName;
+    }
 }

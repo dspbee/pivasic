@@ -1,42 +1,44 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace  Dspbee\Bundle\Debug;
+namespace  Pivasic\Bundle\Debug;
 
-use Dspbee\Bundle\Template\Native;
-use Dspbee\Core\Response;
+use Pivasic\Bundle\Template\Native;
+use Pivasic\Core\Response;
 
 /**
- * Render exception or fatal error.
+ * Handle exception or fatal error and output it.
  *
  * Class Wrap
- * @package Dspbee\Bundle\Debug
+ * @package Pivasic\Bundle\Debug
  */
 class Wrap
 {
-    public static $debugEnabled = false;
+    /**
+     * @return bool
+     */
+    public static function isEnabled()
+    {
+        return self::$debugEnabled;
+    }
+
+    /**
+     * @param string $path
+     */
+    public static function setPackageRoot($path)
+    {
+        self::$packageRoot = $path;
+    }
 
     /**
      * Register error handle.
      */
     public static function register()
     {
+        self::$debugEnabled = true;
         set_error_handler('Dspbee\Bundle\Debug\Wrap::render');
         register_shutdown_function(['Dspbee\Bundle\Debug\Wrap', 'handleFatal']);
-    }
-
-    /**
-     * Handle exception.
-     *
-     * @param \Throwable $e
-     *
-     * @return Response
-     */
-    public static function handleException(\Throwable $e): Response
-    {
-        self::render($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), null, $e->getTrace());
     }
 
     /**
@@ -48,6 +50,16 @@ class Wrap
         if(null !== $error) {
             self::render($error["type"], $error["message"], $error["file"], $error["line"]);
         }
+    }
+
+    /**
+     * Handle exception.
+     *
+     * @param \Throwable $e
+     */
+    public static function handleException(\Throwable $e)
+    {
+        self::render($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), null, $e->getTrace());
     }
 
     /**
@@ -91,11 +103,14 @@ class Wrap
             }
         }
 
-        $template = new Native(dirname(__FILE__) . '/', null, true);
+        $template = new Native(self::$packageRoot);
         $response = new Response();
-        $response->headerStatus(418);
+        $response->setStatusCode(418);
         $response->setContent($template->getContent('catch.html.php', $data));
         $response->send();
         exit;
     }
+
+    private static $debugEnabled = false;
+    private static $packageRoot = '';
 }

@@ -1,13 +1,12 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Bundle\Common\Bag;
+namespace Pivasic\Bundle\Common\Bag;
 
 /**
  * Class EnvBag
- * @package Dspbee\Bundle\Common\Bag
+ * @package Pivasic\Bundle\Common\Bag
  */
 class EnvBag extends ValueBag
 {

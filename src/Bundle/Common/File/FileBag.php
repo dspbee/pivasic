@@ -1,28 +1,25 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Bundle\Common\File;
+namespace Pivasic\Bundle\Common\File;
 
 /**
  * Class FileBag
- * @package Dspbee\Bundle\Common\File
+ * @package Pivasic\Bundle\Common\File
  */
 class FileBag
 {
     /**
-     * Initialize bag of FileUpload from $_FILES.
-     *
-     * @param array $files super-global array $_FILES
+     * Initialize bag from $_FILES.
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($files)
+    public function __construct()
     {
         $this->bag = [];
 
-        foreach ($files as $key => $file) {
+        foreach ($_FILES as $key => $file) {
             if (!is_array($file) && !$file instanceof FileUpload) {
                 throw new \InvalidArgumentException('An uploaded file must be an array or an instance of FileUpload.');
             }
@@ -33,27 +30,36 @@ class FileBag
     /**
      * Returns true if the FILE parameter is defined.
      *
-     * @param string $key The key
+     * @param string $key
      *
-     * @return bool true if the parameter exists, false otherwise
+     * @return bool
      */
     public function has($key)
     {
         return array_key_exists($key, $this->bag);
     }
 
+    /**
+     * An array of parameter names.
+     *
+     * @return array
+     */
+    public function keys()
+    {
+        return array_keys($this->bag);
+    }
 
     /**
-     * Returns a parameter by name.
+     * Get value by parameter name.
      *
      * @param string $key
-     * @param mixed|null $default The default value if the parameter key does not exist
+     * @param mixed|null $default The default value if parameter does not exist
      *
      * @return FileUpload|array|null
      */
     public function fetch($key, $default = null)
     {
-        return isset($this->bag[$key]) ? $this->bag[$key] : $default;
+        return $this->bag[$key] ?? $default;
     }
 
     /**
@@ -63,7 +69,7 @@ class FileBag
      *
      * @return array A (multi-dimensional) array of FileUpload instances
      */
-    protected function convertFileInformation($file)
+    private function convertFileInformation($file)
     {
         if ($file instanceof FileUpload) {
             return $file;
@@ -81,7 +87,7 @@ class FileBag
                     $file = new FileUpload($file['tmp_name'], $file['name'], $file['size'], $file['type'], $file['error']);
                 }
             } else {
-                $file = array_map(array($this, 'convertFileInformation'), $file);
+                $file = array_map([$this, 'convertFileInformation'], $file);
             }
         }
 
@@ -104,7 +110,7 @@ class FileBag
      *
      * @return array
      */
-    protected function fixPhpFilesArray($data)
+    private function fixPhpFilesArray($data)
     {
         if (!is_array($data)) {
             return $data;

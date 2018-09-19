@@ -1,13 +1,12 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Bundle\Template\Exception;
+namespace Pivasic\Bundle\Template\Exception;
 
 /**
  * Class FileNotFoundException
- * @package Dspbee\Bundle\Common\File\Exception
+ * @package Pivasic\Bundle\Common\File\Exception
  */
 class FileNotFoundException extends \RuntimeException
 {

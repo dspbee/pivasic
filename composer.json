@@ -15,7 +15,7 @@
   "authors": [
     {
       "name": "Igor Sorokin",
-      "email": "dspbee@pivasic.com",
+      "email": "dspbee@gmail.com",
       "role": "developer"
     }
   ],
@@ -26,11 +26,11 @@
     "php": ">=7"
   },
   "require-dev": {
-    "phpunit/phpunit": "~5.1"
+    "phpunit/phpunit": "^7"
   },
   "autoload": {
     "psr-4": {
-      "Dspbee\\": "src/"
+      "Pivasic\\": "src/"
     },
     "classmap": [
       "src/"
@@ -38,7 +38,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Dspbee\\Test\\": "test/UnitTest/"
+      "Pivasic\\Test\\": "test/PivasicTest/"
     }
   }
 }

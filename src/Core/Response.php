@@ -1,15 +1,14 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Core;
+namespace Pivasic\Core;
 
 /**
  * Represents a HTTP response.
  *
  * Class Response
- * @package Dspbee\Core
+ * @package Pivasic\Core
  */
 class Response
 {
@@ -51,16 +50,6 @@ class Response
     }
 
     /**
-     * Get response body.
-     *
-     * @return string
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
      * Set response header.
      *
      * @param string $name
@@ -96,16 +85,16 @@ class Response
     /**
      * Set response status.
      *
-     * @param integer $statusCode  - status
-     * @param string $version      - HTTP version
-     * @param string|null $statusText     - status text
+     * @param integer $statusCode       - status
+     * @param string $version           - HTTP version
+     * @param string|null $statusText   - status text
      *
      * @return bool
      */
-    public function headerStatus($statusCode, $version = '1.1', $statusText = null)
+    public function setStatusCode($statusCode, $version = '1.1', $statusText = null)
     {
         if (!headers_sent()) {
-            $statusCode = (int) $statusCode;
+            $statusCode = intval($statusCode);
 
             if (null === $statusText) {
                 $statusTexts = [

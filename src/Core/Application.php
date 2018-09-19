@@ -1,13 +1,13 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Core;
+namespace Pivasic\Core;
 
-use Dspbee\Bundle\Template\Native;
+use Pivasic\Bundle\Template\Native;
 
 /**
+ * Initialize autoload.
  * Process request and get response.
  *
  * Class Application
@@ -31,7 +31,7 @@ class Application
         spl_autoload_register(function ($path) use ($appRoot) {
             $path = explode('\\', $path);
             array_shift($path);                           // Vendor
-            $package = $appRoot . array_shift($path); // Package
+            $package = $appRoot . array_shift($path);     // Package
             $path = $package . '/src/' . implode('/', $path) . '.php';
             if (file_exists($path)) {
                 require_once $path;
@@ -42,14 +42,14 @@ class Application
     /**
      * Process request.
      *
-     * @param array $languageList
      * @param array $packageList
-     * @param array $routeClassList
+     * @param array $languageList
+     * @param array $customRouteList
      * @param null|string $url
      *
      * @return Response
      */
-    public function run(array $languageList, array $packageList, array $routeClassList, $url = null): Response
+    public function getResponse(array $packageList, array $languageList, array $customRouteList, $url = null): Response
     {
         $request = new Request($languageList, $packageList, $url);
 
@@ -58,20 +58,20 @@ class Application
         /**
          * Process request.
          */
-        if (isset($routeClassList[$request->package()])) {
+        if (isset($customRouteList[$request->package()])) {
             /**
              * Custom routing.
              */
             /**
              * Path to router class.
              */
-            $path = $this->packageRoot . $routeClassList[$request->package()] . '.php';
+            $path = $this->packageRoot . 'CustomRoute.php';
             if (file_exists($path)) {
                 require $path;
                 /**
                  * Name of router class.
                  */
-                $route = $request->package() . '\\' .  $routeClassList[$request->package()];
+                $route = $request->package() . '\\CustomRoute';
                 /**
                  * @var IRoute $route
                  */
@@ -95,7 +95,7 @@ class Application
          * If not found.
          */
         $response = new Response();
-        $response->headerStatus(404);
+        $response->setStatusCode(404);
 
         $content = '404 Not Found';
         if (file_exists($this->packageRoot . '/view/404.html.php')) {

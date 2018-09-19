@@ -1,13 +1,12 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Bundle\Common\Bag;
+namespace Pivasic\Bundle\Common\Bag;
 
 /**
  * Class ValueBag
- * @package Dspbee\Bundle\Common\Bag
+ * @package Pivasic\Bundle\Common\Bag
  */
 class ValueBag
 {
@@ -20,19 +19,11 @@ class ValueBag
     }
 
     /**
-     * @param array $bag
-     */
-    public function add(array $bag = [])
-    {
-        $this->bag = array_replace($this->bag, $bag);
-    }
-
-    /**
-     * Returns true if the parameter is defined.
+     * Returns true if parameter is defined.
      *
-     * @param string $key The key
+     * @param string $key
      *
-     * @return bool true if the parameter exists, false otherwise
+     * @return bool
      */
     public function has($key)
     {
@@ -40,9 +31,9 @@ class ValueBag
     }
 
     /**
-     * Returns the parameter keys.
+     * An array of parameter names.
      *
-     * @return array An array of parameter keys
+     * @return array
      */
     public function keys()
     {
@@ -50,10 +41,10 @@ class ValueBag
     }
 
     /**
-     * Returns a parameter by name.
+     * Get value by parameter name.
      *
      * @param string $key
-     * @param mixed|null $default The default value if the parameter key does not exist
+     * @param mixed|null $default The default value if parameter does not exist
      *
      * @return mixed|null
      */
@@ -68,36 +59,36 @@ class ValueBag
     }
 
     /**
-     * Returns the bag value converted to integer.
+     * Get parameter value converted to integer.
      *
      * @param string $key
-     * @param int $default The default value if the parameter key does not exist
+     * @param int $default The default value if parameter does not exist
      *
      * @return int
      */
     public function fetchInt($key, $default = 0)
     {
-        return (int) $this->fetch($key, $default);
+        return intval($this->fetch($key, $default));
     }
 
     /**
-     * Returns the bag value converted to float with precision.
+     * Get parameter value converted to float with precision.
      *
      * @param string $key
-     * @param float $default The default value if the parameter key does not exist
+     * @param float $default The default value if parameter does not exist
      * @param int $precision The optional number of decimal digits to round to
      * @return float
      */
     public function fetchFloat($key, $default = 0.0, $precision = 2)
     {
-        return round((float) $this->fetch($key, $default), $precision);
+        return round(floatval($this->fetch($key, $default)), $precision);
     }
 
     /**
-     * Returns the bag value converted to boolean.
+     * Get parameter value converted to boolean.
      *
      * @param string $key
-     * @param bool|false $default The default value if the parameter key does not exist
+     * @param bool|false $default The default value if parameter does not exist
      * @return mixed
      */
     public function fetchBool($key, $default = false)
@@ -109,7 +100,7 @@ class ValueBag
      * Filter value.
      *
      * @param string $key
-     * @param mixed|null $default The default value if the parameter key does not exist
+     * @param mixed|null $default The default value if parameter does not exist
      * @param int $filter         FILTER_* constant
      * @param array $options      Filter options
      *
@@ -161,7 +152,7 @@ class ValueBag
     }
 
     /**
-     * Returns the number of values.
+     * Returns the count of parameters.
      *
      * @return int
      */
@@ -170,5 +161,5 @@ class ValueBag
         return count($this->bag);
     }
 
-    protected $bag;
+    private $bag;
 }

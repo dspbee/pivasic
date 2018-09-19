@@ -1,20 +1,19 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Core;
+namespace Pivasic\Core;
 
 /**
  * Base routing.
  *
  * Class DefaultRoute
- * @package Dspbee\Core
+ * @package Pivasic\Core
  */
 class DefaultRoute implements IRoute
 {
     /**
-     * Get object of Response.
+     * Find and call controller, get Response object.
      *
      * @param string $packageRoot
      * @param Request $request

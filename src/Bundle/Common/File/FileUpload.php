@@ -1,15 +1,14 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Bundle\Common\File;
+namespace Pivasic\Bundle\Common\File;
 
-use Dspbee\Bundle\Common\File\Exception\FileException;
+use Pivasic\Bundle\Common\File\Exception\FileException;
 
 /**
  * Class FileUpload
- * @package Dspbee\Bundle\Common\File
+ * @package Pivasic\Bundle\Common\File
  */
 class FileUpload extends File
 {
@@ -28,6 +27,22 @@ class FileUpload extends File
         $this->error = $error ?: UPLOAD_ERR_OK;
 
         parent::__construct($path, UPLOAD_ERR_OK == $this->error);
+    }
+
+    /**
+     * Get file content.
+     *
+     * @return string|mixed
+     */
+    public function read()
+    {
+        $data = '';
+        $fileObj = $this->openFile();
+        while (!$fileObj->eof()) {
+            $data = $fileObj->fread(4096);
+        }
+        $fileObj = null;
+        return $data;
     }
 
     /**
@@ -172,8 +187,8 @@ class FileUpload extends File
     /**
      * Moves the file to a new location.
      *
-     * @param string $directory The destination folder
-     * @param string $name      The new file name
+     * @param string $directory Destination folder
+     * @param string $name      New file name
      *
      * @return File A File object representing the new file
      *

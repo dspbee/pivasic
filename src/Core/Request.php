@@ -1,15 +1,14 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Core;
+namespace Pivasic\Core;
 
 /**
  * Represents a HTTP request.
  *
  * Class Request
- * @package Dspbee\Core
+ * @package Pivasic\Core
  */
 class Request
 {
@@ -26,37 +25,31 @@ class Request
             $url = filter_input_array(INPUT_SERVER)['REQUEST_URI'] ?? '';
         }
         $this->method = 'GET';
-        $this->languageDefault = $languageList[0] ?? '';
-        $this->languageCode = '';
+        $this->defaultLanguage = $languageList[0] ?? '';
+        $this->language = '';
         $this->package = 'Original';
         $this->route = 'index';
 
         $url = explode('?', $url);
-        $url = $url[0];
-        $url = trim(trim($url), '/');
-        if ('' !== $url) {
+        $url = trim(trim($url[0]), '/');
+        if ('' != $url) {
             $partList = explode('/', $url);
-
-            /**
-             * Delete front controller.
-             */
-            if (false !== strpos($partList[0], '.php')) {
-                $partList = $this->unset0($partList);
-            }
 
             /**
              * Check language.
              */
-            if (isset($partList[0]) && false !== ($key = array_search($partList[0], $languageList))) {
-                $partList = $this->unset0($partList);
-                $this->languageCode = $languageList[$key];
+            if (false !== ($key = array_search($partList[0], $languageList))) {
+                unset($partList[0]);
+                $partList = array_values($partList);
+                $this->language = $languageList[$key];
             }
 
             /**
              * Check package.
              */
             if (isset($partList[0]) && false !== ($key = array_search(ucfirst($partList[0]), $packageList))) {
-                $partList = $this->unset0($partList);
+                unset($partList[0]);
+                $partList = array_values($partList);
                 $this->package = $packageList[$key];
             }
 
@@ -77,10 +70,10 @@ class Request
         /**
          * Get method.
          */
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 'xmlhttprequest' == strtolower($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 'xmlhttprequest' == strtolower($_SERVER['HTTP_X_REQUESTED_WITH'])) {
             $this->method = 'AJAX';
         } else {
-            if (isset($_SERVER['REQUEST_METHOD']) && in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST', 'OPTIONS', 'HEAD', 'PUT', 'DELETE', 'TRACE', 'CONNECT'])) {
+            if (isset($_SERVER['REQUEST_METHOD']) && in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST', 'HEAD', 'PUT', 'DELETE'])) {
                 $this->method = $_SERVER['REQUEST_METHOD'];
             }
         }
@@ -97,36 +90,6 @@ class Request
     }
 
     /**
-     * Request method.
-     *
-     * @return string
-     */
-    public function method()
-    {
-        return $this->method;
-    }
-
-    /**
-     * A default language code.
-     *
-     * @return string
-     */
-    public function languageDefault()
-    {
-        return $this->languageDefault;
-    }
-
-    /**
-     * A language code.
-     *
-     * @return string
-     */
-    public function languageCode()
-    {
-        return $this->languageCode;
-    }
-
-    /**
      * Name of an app package.
      *
      * @return string
@@ -137,7 +100,7 @@ class Request
     }
 
     /**
-     * URL path without front controller, language code, package name and an optional query.
+     * URL path without language code, package name and an optional query parameters.
      *
      * @return string
      */
@@ -146,83 +109,40 @@ class Request
         return $this->route;
     }
 
-
     /**
-     * Create absolute url path or full uri from route.
-     *
-     * @param string $route
-     * @param bool $domain
+     * Request method.
      *
      * @return string
      */
-    public function makeUrl($route = '', $domain = false)
+    public function method()
     {
-        $controller = '';
-        if (false !== strpos($this->url, '.php')) {
-            $controller = explode('.php', $this->url);
-            $controller = ltrim($controller[0], '/') . '.php';
-        }
-        $route = trim($route, '/');
-        if ('Original' == $this->package) {
-            if ($this->languageCode != $this->languageDefault) {
-                $url = trim('/' . $this->languageCode . '/' . $route, '/');
-            } else {
-                $url = trim('/' . $route, '/');
-            }
-        } else {
-            if ($this->languageCode != $this->languageDefault) {
-                $url = trim('/' . $this->languageCode . '/' . lcfirst($this->package) . '/' . $route, '/');
-            } else {
-                $url = trim('/' . lcfirst($this->package) . '/' . $route, '/');
-            }
-        }
-        if ($domain) {
-            $host = '';
-            if (isset($_SERVER['HTTP_HOST'])) {
-                $host = $_SERVER['HTTP_HOST'];
-            } else if (isset($_SERVER['SERVER_NAME'])) {
-                $host = $_SERVER['SERVER_NAME'];
-            }
-            $protocol = 'http://';
-            if (
-                (isset($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS']) ||
-                (isset($_SERVER['SERVER_PORT']) && 443 == $_SERVER['SERVER_PORT'])
-            ) {
-                $protocol = 'https://';
-            }
-            if (empty($controller)) {
-                $url = $protocol . $host . '/' . $url;
-            } else {
-                $url = $protocol . $host . '/' . $controller . '/' . $url;
-            }
-        } else {
-            if (empty($controller)) {
-                $url = '/' . $url;
-            } else {
-                $url = '/' . $controller . '/' . $url;
-            }
-        }
-
-        return $url;
+        return $this->method;
     }
 
     /**
-     * Delete first element and reordering array.
+     * A language code.
      *
-     * @param array $partList
-     *
-     * @return array
+     * @return string
      */
-    private function unset0(array $partList)
+    public function language()
     {
-        unset($partList[0]);
-        return array_values($partList);
+        return $this->language;
+    }
+
+    /**
+     * A default language code.
+     *
+     * @return string
+     */
+    public function defaultLanguage()
+    {
+        return $this->defaultLanguage;
     }
 
     private $url;
-    private $method;
-    private $languageDefault;
-    private $languageCode;
     private $package;
     private $route;
+    private $method;
+    private $language;
+    private $defaultLanguage;
 }

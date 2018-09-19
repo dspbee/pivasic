@@ -1,50 +1,20 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Bundle\Common\Bag;
+namespace Pivasic\Bundle\Common\Bag;
 
 /**
  * Class ServerBag
- * @package Dspbee\Bundle\Common\Bag
+ * @package Pivasic\Bundle\Common\Bag
  */
 class ServerBag extends ValueBag
 {
     public function __construct()
     {
-        parent::__construct([]);
+        parent::__construct($_SERVER);
     }
 
-    /**
-     * @param array $bag
-     */
-    public function add(array $bag = [])
-    {
-        $_SERVER = array_replace($_SERVER, $bag);
-    }
-
-    /**
-     * Returns true if the SERVER parameter is defined.
-     *
-     * @param string $key The key
-     *
-     * @return bool true if the parameter exists, false otherwise
-     */
-    public function has($key)
-    {
-        return array_key_exists($key, $_SERVER);
-    }
-
-    /**
-     * Returns the SERVER keys.
-     *
-     * @return array An array of parameter keys
-     */
-    public function keys()
-    {
-        return array_keys($_SERVER);
-    }
     /**
      * Returns a SERVER parameter by name.
      *
@@ -61,15 +31,5 @@ class ServerBag extends ValueBag
             $key = 'HTTP_' . $key;
             return $_SERVER[$key] ?? $default;
         }
-    }
-
-    /**
-     * Returns the number of values.
-     *
-     * @return int
-     */
-    public function count()
-    {
-        return count($_SERVER);
     }
 }

@@ -1,18 +1,17 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Core;
+namespace Pivasic\Core;
 
 /**
  * Interface IRoute
- * @package Dspbee\Core
+ * @package Pivasic\Core
  */
 interface IRoute
 {
     /**
-     * Get object of Response.
+     * Find and call controller, get Response object.
      *
      * @param string $packageRoot
      * @param Request $request

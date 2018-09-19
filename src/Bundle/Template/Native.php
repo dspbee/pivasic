@@ -1,39 +1,24 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Bundle\Template;
+namespace Pivasic\Bundle\Template;
 
-use Dspbee\Bundle\Common\TFileSystem;
-use Dspbee\Bundle\Debug\Wrap;
-use Dspbee\Bundle\Template\Exception\FileNotFoundException;
-use Dspbee\Core\Request;
+use Pivasic\Bundle\Template\Exception\FileNotFoundException;
 
 /**
  * Class Native
- * @package Dspbee\Bundle\Template
+ * @package Pivasic\Bundle\Template
  */
 class Native
 {
-    use TFileSystem;
-
     /**
      * @param string $packageRoot
-     * @param Request|null $request
-     * @param bool $cache
      */
-    public function __construct($packageRoot, Request $request = null, $cache = true)
+    public function __construct($packageRoot)
     {
         $this->packageRoot = rtrim($packageRoot, '/');
-        $this->request = $request;
-        $this->routeView = false;
-
-        if (class_exists('Dspbee\Bundle\Debug\Wrap')) {
-            $this->cache = !Wrap::$debugEnabled;
-        } else {
-            $this->cache = $cache;
-        }
+        $this->isRouteView = false;
     }
 
     /**
@@ -52,7 +37,7 @@ class Native
                 $name = '.' . $name;
             }
             $name = 'view' . $name . '.html.php';
-            $this->routeView = true;
+            $this->isRouteView = true;
 
             $stack = debug_backtrace();
             foreach ($stack as $item) {
@@ -66,7 +51,7 @@ class Native
         }
         $path = $this->packageRoot . '/view/_cache/' . str_replace('/', '_', $cacheName);
 
-        if (!file_exists($path) || !$this->cache) {
+        if (!file_exists($path)) {
             $code = $this->compile($name, true, true);
             if (empty($code)) {
                 return null;
@@ -77,47 +62,20 @@ class Native
                 fwrite($fh, $code);
                 flock($fh, LOCK_UN);
             }
-            fflush($fh);
             fclose($fh);
         }
 
         $fh = fopen($path, 'rb');
-        flock($fh, LOCK_SH);
+        if (flock($fh, LOCK_SH)) {
+            $html = self::renderTemplate($path, $data);
 
-        if (null !== $this->request) {
-            $data = array_replace($data, ['request' => $this->request]);
+            flock($fh, LOCK_UN);
+            fclose($fh);
+
+            return $html;
         }
 
-        $html = self::renderTemplate($path, $data);
-
-        flock($fh, LOCK_UN);
-        fclose($fh);
-
-        return $html;
-    }
-
-    /**
-     * Use cache.
-     */
-    public function enableCache()
-    {
-        $this->cache = true;
-    }
-
-    /**
-     * Render without cache.
-     */
-    public function disableCache()
-    {
-        $this->cache = false;
-    }
-
-    /**
-     * Delete all cached templates.
-     */
-    public function clearCache()
-    {
-        self::removeFromDir($this->packageRoot . '/view/_cache');
+        return null;
     }
 
     /**
@@ -133,8 +91,8 @@ class Native
      */
     private function compile($name, $processInclude, $processExtends)
     {
-        if ($this->routeView) {
-            $this->routeView = false;
+        if ($this->isRouteView) {
+            $this->isRouteView = false;
             $path = '';
             $stack = debug_backtrace();
             foreach ($stack as $item) {
@@ -157,7 +115,7 @@ class Native
 
         if ($processInclude) {
             preg_match_all('/<!-- include (.*) -->/', $code, $matchList);
-            if (count($matchList)) {
+            if (isset($matchList[1])) {
                 foreach ($matchList[1] as $key => $template) {
                     if (!empty($matchList[0][$key]) && false !== strpos($code, $matchList[0][$key])) {
                         $template = trim($template);
@@ -198,9 +156,7 @@ class Native
         return ob_get_clean();
     }
 
-    private $request;
     private $packageRoot;
-    private $cache;
-    private $routeView;
+    private $isRouteView;
 }
 

@@ -1,16 +1,15 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Bundle\Common\File\MimeType;
+namespace Pivasic\Bundle\Common\File\MimeType;
 
-use Dspbee\Bundle\Common\File\Exception\FileNotFoundException;
-use Dspbee\Bundle\Common\File\Exception\AccessDeniedException;
+use Pivasic\Bundle\Common\File\Exception\FileNotFoundException;
+use Pivasic\Bundle\Common\File\Exception\AccessDeniedException;
 
 /**
  * Class FileInfoMimeType
- * @package Dspbee\Bundle\Common\File\MimeType
+ * @package Pivasic\Bundle\Common\File\MimeType
  */
 class FileInfoMimeType
 {

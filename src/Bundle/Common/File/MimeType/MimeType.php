@@ -1,16 +1,15 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Bundle\Common\File\MimeType;
+namespace Pivasic\Bundle\Common\File\MimeType;
 
-use Dspbee\Bundle\Common\File\Exception\FileNotFoundException;
-use Dspbee\Bundle\Common\File\Exception\AccessDeniedException;
+use Pivasic\Bundle\Common\File\Exception\FileNotFoundException;
+use Pivasic\Bundle\Common\File\Exception\AccessDeniedException;
 
 /**
  * Class MimeTypeGuesser
- * @package Dspbee\Bundle\Common\File\MimeType
+ * @package Pivasic\Bundle\Common\File\MimeType
  */
 class MimeType
 {
@@ -29,9 +28,11 @@ class MimeType
 
 
     /**
-     * @param string $path The path to the file
+     * Get mime type or NULL, if none could be guessed.
      *
-     * @return string The mime type or NULL, if none could be guessed
+     * @param string $path Path to the file
+     *
+     * @return string
      *
      * @throws \LogicException
      * @throws FileNotFoundException
@@ -47,7 +48,7 @@ class MimeType
             throw new AccessDeniedException($path);
         }
 
-        if (0 == count($this->guessers)) {
+        if (0 == count($this->guesserList)) {
             $msg = 'Unable to guess the mime type as no guessers are available';
             if (!FileInfoMimeType::isSupported()) {
                 $msg .= ' (Did you enable the php_fileinfo extension?)';
@@ -56,7 +57,7 @@ class MimeType
         }
 
         /** @var FileInfoMimeType|BinaryMimeType $guesser */
-        foreach ($this->guessers as $guesser) {
+        foreach ($this->guesserList as $guesser) {
             if (null !== $mimeType = $guesser->guess($path)) {
                 return $mimeType;
             }
@@ -71,13 +72,13 @@ class MimeType
      */
     private function __construct()
     {
-        $this->guessers = [];
+        $this->guesserList = [];
 
         if (FileInfoMimeType::isSupported()) {
-            $this->guessers[] = new FileInfoMimeType();
+            $this->guesserList[] = new FileInfoMimeType();
         }
         if (BinaryMimeType::isSupported()) {
-            $this->guessers[] = new BinaryMimeType();
+            $this->guesserList[] = new BinaryMimeType();
         }
     }
 
@@ -87,5 +88,5 @@ class MimeType
      */
     private static $instance = null;
 
-    private $guessers;
+    private $guesserList;
 }

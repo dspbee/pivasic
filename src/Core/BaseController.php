@@ -1,17 +1,16 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Core;
+namespace Pivasic\Core;
 
-use Dspbee\Bundle\Template\Native;
+use Pivasic\Bundle\Template\Native;
 
 /**
- * Base functions to process request.
+ * Base functions to service request.
  *
  * Class BaseController
- * @package Dspbee\Core
+ * @package Pivasic\Core
  */
 class BaseController
 {
@@ -66,7 +65,7 @@ class BaseController
     }
 
     /**
-     * Redirect to URL with statusCode and terminate app.
+     * Redirect to the URL with statusCode.
      *
      * @param null $url
      * @param int $statusCode
@@ -77,7 +76,7 @@ class BaseController
         $this->response->redirect($url, $statusCode);
     }
 
-    protected $packageRoot;
-    protected $request;
-    protected $response;
+    private $packageRoot;
+    private $request;
+    private $response;
 }

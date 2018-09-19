@@ -1,20 +1,19 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Bundle\Common\Session;
+namespace Pivasic\Bundle\Common\Session;
 
 /**
  * Class Session
- * @package Dspbee\Bundle\Common\Session
+ * @package Pivasic\Bundle\Common\Session
  */
 class Session
 {
     public function __construct()
     {
         $this->session = null;
-        ini_set('session.use_cookies', 1);
+        //ini_set('session.use_cookies', 1);
     }
 
     /**

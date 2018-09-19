@@ -1,15 +1,14 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Bundle\Common\Session;
+namespace Pivasic\Bundle\Common\Session;
 
-use Dspbee\Bundle\Common\Bag\ValueBag;
+use Pivasic\Bundle\Common\Bag\ValueBag;
 
 /**
  * Class SessionBag
- * @package Dspbee\Bundle\Common\Session
+ * @package Pivasic\Bundle\Common\Session
  */
 class SessionBag extends ValueBag
 {
@@ -19,25 +18,11 @@ class SessionBag extends ValueBag
     }
 
     /**
-     * @param array $bag
+     * Get true if the SESSION parameter is defined.
      *
-     * @throws \LogicException
-     */
-    public function add(array $bag = [])
-    {
-        if (isset($_SESSION)) {
-            $_SESSION = array_replace($_SESSION, $bag);
-        } else {
-            throw new \LogicException('Cannot set the value of an inactive session');
-        }
-    }
-
-    /**
-     * Returns true if the SESSION parameter is defined.
+     * @param string $key
      *
-     * @param string $key The key
-     *
-     * @return bool true if the parameter exists, false otherwise
+     * @return bool true
      */
     public function has($key)
     {
@@ -45,9 +30,9 @@ class SessionBag extends ValueBag
     }
 
     /**
-     * Returns the SESSION keys.
+     * Get the SESSION keys.
      *
-     * @return array An array of parameter keys
+     * @return array
      */
     public function keys()
     {
@@ -73,7 +58,7 @@ class SessionBag extends ValueBag
      * Returns a SESSION parameter by name.
      *
      * @param string $key
-     * @param mixed|null $default The default value if the parameter key does not exist
+     * @param mixed|null $default The default value if parameter does not exist
      *
      * @return mixed|null
      */

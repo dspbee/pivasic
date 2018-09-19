@@ -1,13 +1,12 @@
 <?php
 /**
  * @license MIT
- * @author Igor Sorokin <dspbee@pivasic.com>
  */
-namespace Dspbee\Bundle\Common\File\Extension;
+namespace Pivasic\Bundle\Common\File\Extension;
 
 /**
  * Class Extension
- * @package Dspbee\Bundle\Common\File\Extension
+ * @package Pivasic\Bundle\Common\File\Extension
  */
 class Extension
 {
@@ -26,14 +25,16 @@ class Extension
 
 
     /**
-     * @param string $mimeType The mime type
+     * Get file extension by mime type.
+     *
+     * @param string $mimeType
      *
      * @return string
      *
      */
     public function guess($mimeType)
     {
-        return isset($this->defaultExtensions[$mimeType]) ? $this->defaultExtensions[$mimeType] : null;
+        return $this->defaultExtensions[$mimeType] ?? null;
     }
 
 
