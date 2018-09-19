@@ -53,7 +53,7 @@ class Application
     {
         $request = new Request($languageList, $packageList, $url);
 
-        $this->packageRoot .= $request->package() . '/';
+        $this->packageRoot .= 'package/' . $request->package() . '/';
 
         /**
          * Process request.
