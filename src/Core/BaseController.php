@@ -50,7 +50,7 @@ class BaseController
     public function setView($name = '', array $data = [])
     {
         $this->response = new Response;
-        $this->response->setContent((new Native($this->packageRoot, $this->request))->getContent($name, $data));
+        $this->response->setContent((new Native($this->packageRoot))->getContent($name, $data));
     }
 
     /**

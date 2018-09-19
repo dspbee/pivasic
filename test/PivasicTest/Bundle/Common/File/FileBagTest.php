@@ -1,8 +1,8 @@
 <?php
-namespace Dspbee\Test\Bundle\Common\File;
+namespace Pivasic\Test\Bundle\Common\File;
 
-use Dspbee\Bundle\Common\File\FileBag;
 use PHPUnit\Framework\TestCase;
+use Pivasic\Bundle\Common\File\FileBag;
 
 class FileBagTest extends TestCase
 {
@@ -13,12 +13,13 @@ class FileBagTest extends TestCase
     public function testInvalidArgumentException()
     {
         $_FILES['foo'] = 'bar';
-        new FileBag($_FILES);
+        new FileBag();
     }
 
     public function testHas()
     {
-        $file = new FileBag([]);
+        $_FILES = [];
+        $file = new FileBag();
         $this->assertFalse($file->has('test'));
     }
 }

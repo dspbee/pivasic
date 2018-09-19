@@ -1,9 +1,9 @@
 <?php
-namespace Dspbee\Test\Core;
+namespace Pivasic\Test\Core;
 
-use Dspbee\Core\DefaultRoute;
-use Dspbee\Core\Request;
 use PHPUnit\Framework\TestCase;
+use Pivasic\Core\DefaultRoute;
+use Pivasic\Core\Request;
 
 class DefaultRouteTest extends TestCase
 {

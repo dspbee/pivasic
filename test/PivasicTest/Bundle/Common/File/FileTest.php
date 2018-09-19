@@ -1,8 +1,8 @@
 <?php
-namespace Dspbee\Test\Bundle\Common\File;
+namespace Pivasic\Test\Bundle\Common\File;
 
-use Dspbee\Bundle\Common\File\File;
 use PHPUnit\Framework\TestCase;
+use Pivasic\Bundle\Common\File\File;
 
 class FileTest extends TestCase
 {
@@ -16,7 +16,7 @@ class FileTest extends TestCase
     }
 
     /**
-     * @expectedException Dspbee\Bundle\Common\File\Exception\FileNotFoundException
+     * @expectedException Pivasic\Bundle\Common\File\Exception\FileNotFoundException
      */
     public function testFileNotFoundException()
     {

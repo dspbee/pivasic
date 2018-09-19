@@ -1,8 +1,8 @@
 <?php
-namespace Dspbee\Test\Bundle\Common\Bag;
+namespace Pivasic\Test\Bundle\Common\Bag;
 
-use Dspbee\Bundle\Common\Bag\ValueBag;
 use PHPUnit\Framework\TestCase;
+use Pivasic\Bundle\Common\Bag\ValueBag;
 
 class ValueBagTest extends TestCase
 {
@@ -29,8 +29,8 @@ class ValueBagTest extends TestCase
         $bag = new ValueBag(['key' => '12.8']);
         $this->assertEquals(false, $bag->fetchFilter('key', null, FILTER_VALIDATE_EMAIL));
 
-        $bag = new ValueBag(['key' => 'dspbee@gmail.com']);
-        $this->assertEquals('dspbee@gmail.com', $bag->fetchFilter('key', null, FILTER_VALIDATE_EMAIL));
+        $bag = new ValueBag(['key' => 'Pivasic@gmail.com']);
+        $this->assertEquals('Pivasic@gmail.com', $bag->fetchFilter('key', null, FILTER_VALIDATE_EMAIL));
 
         $call = function ($value) {
             return filter_var($value, FILTER_SANITIZE_STRING);
@@ -102,7 +102,7 @@ class ValueBagTest extends TestCase
      */
     public function testAdd($key, $value)
     {
-        $this->bag->add([$key => $value]);
+        $this->bag = new ValueBag([$key => $value]);
         $this->assertEquals($value, $this->bag->fetch($key));
     }
 
@@ -114,7 +114,7 @@ class ValueBagTest extends TestCase
      */
     public function testGet($key, $value)
     {
-        $this->bag->add([$key => $value]);
+        $this->bag = new ValueBag([$key => $value]);
         $this->assertEquals($value, $this->bag->fetch($key));
 
 
@@ -135,7 +135,7 @@ class ValueBagTest extends TestCase
      */
     public function testHas($key, $value)
     {
-        $this->bag->add([$key => $value]);
+        $this->bag = new ValueBag([$key => $value]);
         $this->assertTrue($this->bag->has($key));
     }
 
@@ -147,7 +147,7 @@ class ValueBagTest extends TestCase
      */
     public function testKeys($list, $keys)
     {
-        $this->bag->add($list);
+        $this->bag = new ValueBag($list);
         $this->assertEquals($keys, $this->bag->keys());
     }
 
@@ -159,7 +159,7 @@ class ValueBagTest extends TestCase
      */
     public function testCount($list, $count)
     {
-        $this->bag->add($list);
+        $this->bag = new ValueBag($list);
         $this->assertEquals($count, $this->bag->count());
     }
 

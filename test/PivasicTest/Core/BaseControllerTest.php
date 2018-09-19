@@ -1,15 +1,15 @@
 <?php
-namespace Dspbee\Test\Core;
+namespace Pivasic\Test\Core;
 
-use Dspbee\Core\BaseController;
-use Dspbee\Core\Request;
-use Dspbee\Core\Response;
 use PHPUnit\Framework\TestCase;
+use Pivasic\Core\BaseController;
+use Pivasic\Core\Request;
+use Pivasic\Core\Response;
 
 class BaseProcessTest extends TestCase
 {
     /**
-     * @expectedException Dspbee\Bundle\Template\Exception\FileNotFoundException
+     * @expectedException \Pivasic\Bundle\Template\Exception\FileNotFoundException
      */
     public function testSetTemplate()
     {
@@ -21,8 +21,7 @@ class BaseProcessTest extends TestCase
     {
         $controller =  new BaseController('', new Request());
         $controller->setContent('test');
-        $this->assertInstanceOf('Dspbee\Core\Response', $controller->getResponse());
-        $this->assertEquals('test', $controller->getResponse()->getContent());
+        $this->assertInstanceOf('Pivasic\Core\Response', $controller->getResponse());
     }
 
     public function testGetResponse()
@@ -30,7 +29,7 @@ class BaseProcessTest extends TestCase
         $controller = new BaseController('', new Request());
         $this->assertNull($controller->getResponse());
         $controller->setContent('');
-        $this->assertInstanceOf('Dspbee\Core\Response', $controller->getResponse());
+        $this->assertInstanceOf('Pivasic\Core\Response', $controller->getResponse());
     }
 
     public function testSetResponse()
@@ -42,7 +41,6 @@ class BaseProcessTest extends TestCase
         $response->setContent('test');
 
         $controller->setResponse($response);
-        $this->assertInstanceOf('Dspbee\Core\Response', $controller->getResponse());
-        $this->assertEquals('test', $controller->getResponse()->getContent());
+        $this->assertInstanceOf('Pivasic\Core\Response', $controller->getResponse());
     }
 }

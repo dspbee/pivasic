@@ -1,8 +1,8 @@
 <?php
-namespace Dspbee\Test\Core;
+namespace Pivasic\Test\Core;
 
-use Dspbee\Core\Request;
 use PHPUnit\Framework\TestCase;
+use Pivasic\Core\Request;
 
 class RequestTest extends TestCase
 {
@@ -93,14 +93,14 @@ class RequestTest extends TestCase
     public function testRequestLanguage()
     {
         $request = new Request();
-        $this->assertEmpty($request->languageCode());
+        $this->assertEmpty($request->language());
 
         $request = new Request(['en'], ['Custom'], 'en/custom/blog?page=2');
-        $this->assertEquals('en', $request->languageCode());
+        $this->assertEquals('en', $request->language());
 
         $request = new Request(['ru', 'en'], ['Custom'], 'en/custom/blog?page=2');
-        $this->assertEquals('en', $request->languageCode());
-        $this->assertEquals('ru', $request->languageDefault());
+        $this->assertEquals('en', $request->language());
+        $this->assertEquals('ru', $request->defaultLanguage());
     }
 
     public function testRequestPackage()
@@ -183,110 +183,66 @@ class RequestTest extends TestCase
 
 
         $request = new Request([], [], 'app.dev.php');
-        $this->assertEquals('index', $request->route());
+        $this->assertEquals('app_dev_php', $request->route());
 
         $request = new Request([], [], 'app.dev.php/');
-        $this->assertEquals('index', $request->route());
+        $this->assertEquals('app_dev_php', $request->route());
 
         $request = new Request([], [], '/app.dev.php///');
-        $this->assertEquals('index', $request->route());
+        $this->assertEquals('app_dev_php', $request->route());
 
         $request = new Request([], [], 'app.dev.php/');
-        $this->assertEquals('index', $request->route());
+        $this->assertEquals('app_dev_php', $request->route());
 
         $request = new Request([], [], 'app.dev.php ');
-        $this->assertEquals('index', $request->route());
+        $this->assertEquals('app_dev_php', $request->route());
 
         $request = new Request(['en'], ['Custom'], 'app.dev.php');
-        $this->assertEquals('index', $request->route());
+        $this->assertEquals('app_dev_php', $request->route());
 
         $request = new Request(['en'], ['Custom'], 'app.dev.php/blog');
-        $this->assertEquals('blog', $request->route());
+        $this->assertEquals('app_dev_php/blog', $request->route());
 
         $request = new Request(['en'], ['Custom'], 'app.dev.php/en');
-        $this->assertEquals('index', $request->route());
+        $this->assertEquals('app_dev_php/en', $request->route());
 
         $request = new Request(['en'], ['Custom'], 'app.dev.php/en/blog');
-        $this->assertEquals('blog', $request->route());
+        $this->assertEquals('app_dev_php/en/blog', $request->route());
 
         $request = new Request(['en'], ['Custom'], 'app.dev.php/en/blog/');
-        $this->assertEquals('blog', $request->route());
+        $this->assertEquals('app_dev_php/en/blog', $request->route());
 
         $request = new Request(['en'], ['Custom'], 'app.dev.php/en/blog////');
-        $this->assertEquals('blog', $request->route());
+        $this->assertEquals('app_dev_php/en/blog', $request->route());
 
         $request = new Request(['en'], ['Custom'], 'app.dev.php/en/blog/?page=2');
-        $this->assertEquals('blog', $request->route());
+        $this->assertEquals('app_dev_php/en/blog', $request->route());
 
         $request = new Request(['en'], ['Custom'], 'app.dev.php/en/custom/blog?page=2');
-        $this->assertEquals('blog', $request->route());
+        $this->assertEquals('app_dev_php/en/custom/blog', $request->route());
 
         $request = new Request(['ru', 'en'], ['Custom'], 'app.dev.php/ru/custom/blog?page=2');
-        $this->assertEquals('blog', $request->route());
+        $this->assertEquals('app_dev_php/ru/custom/blog', $request->route());
 
         $request = new Request([], ['Custom'], 'app.dev.php/Custom/blog');
-        $this->assertEquals('blog', $request->route());
+        $this->assertEquals('app_dev_php/Custom/blog', $request->route());
 
         $request = new Request([], ['Custom'], 'app.dev.php/custom/blog');
-        $this->assertEquals('blog', $request->route());
+        $this->assertEquals('app_dev_php/custom/blog', $request->route());
 
         $request = new Request([], ['Manage'], 'app.dev.php/manage/blog');
-        $this->assertEquals('blog', $request->route());
+        $this->assertEquals('app_dev_php/manage/blog', $request->route());
 
         $request = new Request(['en'], ['Custom'], 'app.dev.php/en/custom/blog?page=2');
-        $this->assertEquals('blog', $request->route());
+        $this->assertEquals('app_dev_php/en/custom/blog', $request->route());
 
         $request = new Request(['ru', 'en'], ['Custom'], 'app.dev.php/en/custom/blog?page=2');
-        $this->assertEquals('blog', $request->route());
+        $this->assertEquals('app_dev_php/en/custom/blog', $request->route());
 
         $request = new Request(['ru', 'en'], ['Custom'], 'app.dev.php/en/custom/blog/foo/bar');
-        $this->assertEquals('blog/foo/bar', $request->route());
+        $this->assertEquals('app_dev_php/en/custom/blog/foo/bar', $request->route());
 
         $request = new Request(['ru', 'en'], ['Custom'], 'app.dev.php//blog/foo/bar//');
-        $this->assertEquals('blog/foo/bar', $request->route());
-    }
-
-    public function testRequestMakeUrl()
-    {
-        $_SERVER['HTTP_HOST'] = 'domain.com';
-
-        $request = new Request();
-        $this->assertEquals('/', $request->makeUrl());
-        $this->assertEquals('/foo/bar', $request->makeUrl('foo/bar////'));
-        $this->assertEquals('/foo/bar', $request->makeUrl('//foo/bar////'));
-        $this->assertEquals('http://domain.com/', $request->makeUrl('', true));
-        $this->assertEquals('http://domain.com/blog', $request->makeUrl('blog', true));
-        $this->assertEquals('http://domain.com/foo/bar', $request->makeUrl('foo/bar////', true));
-        $this->assertEquals('http://domain.com/foo/bar', $request->makeUrl('//foo/bar////', true));
-
-        $request = new Request(['en', 'ru'], [], 'en');
-        $this->assertEquals('/', $request->makeUrl('/'));
-        $this->assertEquals('/foo/bar', $request->makeUrl('/foo/bar'));
-        $this->assertEquals('http://domain.com/', $request->makeUrl('/', true));
-        $this->assertEquals('http://domain.com/foo/bar', $request->makeUrl('/foo/bar', true));
-
-        $request = new Request(['en', 'ru'], [], 'ru');
-        $this->assertEquals('/ru', $request->makeUrl('/'));
-        $this->assertEquals('/ru/foo/bar', $request->makeUrl('/foo/bar'));
-        $this->assertEquals('http://domain.com/ru', $request->makeUrl('/', true));
-        $this->assertEquals('http://domain.com/ru/foo/bar', $request->makeUrl('/foo/bar', true));
-
-        $request = new Request(['en', 'ru'], ['Manage'], '/en/manage');
-        $this->assertEquals('/manage', $request->makeUrl('/'));
-        $this->assertEquals('/manage/foo/bar', $request->makeUrl('/foo/bar'));
-        $this->assertEquals('http://domain.com/manage', $request->makeUrl('/', true));
-        $this->assertEquals('http://domain.com/manage/foo/bar', $request->makeUrl('/foo/bar', true));
-
-        $request = new Request(['en', 'ru'], ['Manage'], 'ru/manage//');
-        $this->assertEquals('/ru/manage', $request->makeUrl('/'));
-        $this->assertEquals('/ru/manage/foo/bar', $request->makeUrl('/foo/bar'));
-        $this->assertEquals('http://domain.com/ru/manage', $request->makeUrl('/', true));
-        $this->assertEquals('http://domain.com/ru/manage/foo/bar', $request->makeUrl('/foo/bar', true));
-
-        $request = new Request(['en', 'ru'], ['Manage'], 'app.dev.php/en/manage');
-        $this->assertEquals('/app.dev.php/manage', $request->makeUrl('/'));
-        $this->assertEquals('/app.dev.php/manage/foo/bar', $request->makeUrl('/foo/bar'));
-        $this->assertEquals('http://domain.com/app.dev.php/manage', $request->makeUrl('/', true));
-        $this->assertEquals('http://domain.com/app.dev.php/manage/foo/bar', $request->makeUrl('/foo/bar', true));
+        $this->assertEquals('app_dev_php//blog/foo/bar', $request->route());
     }
 }

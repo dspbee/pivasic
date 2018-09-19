@@ -1,15 +1,14 @@
 <?php
-namespace Dspbee\Test\Core;
+namespace Pivasic\Test\Core;
 
-use Dspbee\Core\Application;
 use PHPUnit\Framework\TestCase;
+use Pivasic\Core\Application;
 
 class ApplicationTest extends TestCase
 {
     public function testApp()
     {
         $app = new Application('');
-        $this->assertInstanceOf('Dspbee\Core\Response', $app->run([], [], []));
-        $this->assertEquals('404 Not Found', $app->run([], [], [])->getContent());
+        $this->assertInstanceOf('Pivasic\Core\Response', $app->getResponse([], [], []));
     }
 }
