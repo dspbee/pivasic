@@ -20,7 +20,7 @@ class Application
      *
      * @param string $appRoot
      */
-    public function __construct($appRoot)
+    public function __construct(string $appRoot)
     {
         $appRoot = rtrim($appRoot, '/') . '/';
         $this->packageRoot = $appRoot;
@@ -31,7 +31,7 @@ class Application
         spl_autoload_register(function ($path) use ($appRoot) {
             $path = explode('\\', $path);
             array_shift($path);                           // Vendor
-            $package = $appRoot . array_shift($path);     // Package
+            $package = $appRoot . 'package/' . array_shift($path);     // Package
             $path = $package . '/src/' . implode('/', $path) . '.php';
             if (file_exists($path)) {
                 require_once $path;
@@ -45,11 +45,11 @@ class Application
      * @param array $packageList
      * @param array $languageList
      * @param array $customRouteList
-     * @param null|string $url
+     * @param string $url
      *
      * @return Response
      */
-    public function getResponse(array $packageList, array $languageList, array $customRouteList, $url = null): Response
+    public function getResponse(array $packageList, array $languageList, array $customRouteList, string $url = ''): Response
     {
         $request = new Request($languageList, $packageList, $url);
 

@@ -15,7 +15,7 @@ class Extension
      *
      * @return Extension
      */
-    public static function getInstance()
+    public static function getInstance(): Extension
     {
         if (null === self::$instance) {
             self::$instance = new self();
@@ -32,9 +32,9 @@ class Extension
      * @return string
      *
      */
-    public function guess($mimeType)
+    public function guess(string $mimeType): string
     {
-        return $this->defaultExtensions[$mimeType] ?? null;
+        return $this->defaultExtensions[$mimeType] ?? '';
     }
 
 

@@ -15,11 +15,11 @@ class FileUpload extends File
     /**
      * @param string $path
      * @param string $name
-     * @param null $size
-     * @param null $mimeType
+     * @param int $size
+     * @param string $mimeType
      * @param null $error
      */
-    public function __construct($path, $name, $size = null, $mimeType = null, $error = null)
+    public function __construct(string $path, string $name, int $size = 0, string $mimeType = '', $error = null)
     {
         $this->name = $this->getName($name);
         $this->size = $size;
@@ -39,7 +39,7 @@ class FileUpload extends File
         $data = '';
         $fileObj = $this->openFile();
         while (!$fileObj->eof()) {
-            $data = $fileObj->fread(4096);
+            $data .= $fileObj->fread(4096);
         }
         $fileObj = null;
         return $data;
@@ -51,9 +51,9 @@ class FileUpload extends File
      * It is extracted from the request from which the file has been uploaded.
      * Then it should not be considered as a safe value.
      *
-     * @return string|null The original name
+     * @return string The original name
      */
-    public function nameUnsafe()
+    public function nameUnsafe(): string
     {
         return $this->name;
     }
@@ -64,9 +64,9 @@ class FileUpload extends File
      * It is extracted from the request from which the file has been uploaded.
      * Then it should not be considered as a safe value.
      *
-     * @return int|null The file size
+     * @return int The file size
      */
-    public function sizeUnsafe()
+    public function sizeUnsafe(): int
     {
         return $this->size;
     }
@@ -77,9 +77,9 @@ class FileUpload extends File
      * The client mime type is extracted from the request from which the file
      * was uploaded, so it should not be considered as a safe value.
      *
-     * @return string|null The mime type
+     * @return string The mime type
      */
-    public function mimeTypeUnsafe()
+    public function mimeTypeUnsafe(): string
     {
         return $this->mimeType;
     }
@@ -102,7 +102,7 @@ class FileUpload extends File
      *
      * @return string The error message regarding the specified error code
      */
-    public function errorMessage()
+    public function errorMessage(): string
     {
         static $errors = array(
             UPLOAD_ERR_INI_SIZE => 'The file "%s" exceeds your upload_max_filesize ini directive (limit is %d KiB).',
@@ -129,7 +129,7 @@ class FileUpload extends File
      *
      * @return string The extension
      */
-    public function extensionUnsafe()
+    public function extensionUnsafe(): string
     {
         return pathinfo($this->name, PATHINFO_EXTENSION);
     }
@@ -139,7 +139,7 @@ class FileUpload extends File
      *
      * @return bool True if the file has been uploaded with HTTP and no error occurred.
      */
-    public function isValid()
+    public function isValid(): bool
     {
         return $this->error === UPLOAD_ERR_OK && is_uploaded_file($this->getPathname());
     }
@@ -149,7 +149,7 @@ class FileUpload extends File
      *
      * @return int The maximum size of an uploaded file in bytes
      */
-    public function getMaxFileSize()
+    public function getMaxFileSize(): int
     {
         $iniMax = strtolower(ini_get('upload_max_filesize'));
 
@@ -169,16 +169,16 @@ class FileUpload extends File
         switch (substr($iniMax, -1)) {
             case 't':
                 $max *= 1024;
-                // no break
+            // no break
             case 'g':
                 $max *= 1024;
-                // no break
+            // no break
             case 'm':
                 $max *= 1024;
-                // no break
+            // no break
             case 'k':
                 $max *= 1024;
-                // no break
+            // no break
         }
 
         return $max;
@@ -189,12 +189,10 @@ class FileUpload extends File
      *
      * @param string $directory Destination folder
      * @param string $name      New file name
-     *
      * @return File A File object representing the new file
-     *
      * @throws FileException
      */
-    public function move($directory, $name = null)
+    public function move(string $directory, string $name = ''): File
     {
         if ($this->isValid()) {
             $target = $this->getTargetFile($directory, $name);

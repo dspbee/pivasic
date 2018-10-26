@@ -20,10 +20,9 @@ class ServerBag extends ValueBag
      *
      * @param string $key
      * @param mixed|null $default The default value if the parameter key does not exist
-     *
      * @return mixed|null
      */
-    public function fetch($key, $default = null)
+    public function fetch(string $key, $default = null)
     {
         if (isset($_SERVER[$key])) {
             return $_SERVER[$key];

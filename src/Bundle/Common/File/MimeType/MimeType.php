@@ -18,7 +18,7 @@ class MimeType
      *
      * @return MimeType
      */
-    public static function getInstance()
+    public static function getInstance(): MimeType
     {
         if (null === self::$instance) {
             self::$instance = new self();
@@ -31,14 +31,12 @@ class MimeType
      * Get mime type or NULL, if none could be guessed.
      *
      * @param string $path Path to the file
-     *
      * @return string
-     *
      * @throws \LogicException
      * @throws FileNotFoundException
      * @throws AccessDeniedException
      */
-    public function guess($path)
+    public function guess(string $path): string
     {
         if (!is_file($path)) {
             throw new FileNotFoundException($path);
@@ -58,12 +56,12 @@ class MimeType
 
         /** @var FileInfoMimeType|BinaryMimeType $guesser */
         foreach ($this->guesserList as $guesser) {
-            if (null !== $mimeType = $guesser->guess($path)) {
+            if ('' != $mimeType = $guesser->guess($path)) {
                 return $mimeType;
             }
         }
 
-        return null;
+        return '';
     }
 
 

@@ -31,10 +31,9 @@ class FileBag
      * Returns true if the FILE parameter is defined.
      *
      * @param string $key
-     *
      * @return bool
      */
-    public function has($key)
+    public function has(string $key): bool
     {
         return array_key_exists($key, $this->bag);
     }
@@ -44,7 +43,7 @@ class FileBag
      *
      * @return array
      */
-    public function keys()
+    public function keys(): array
     {
         return array_keys($this->bag);
     }
@@ -54,10 +53,9 @@ class FileBag
      *
      * @param string $key
      * @param mixed|null $default The default value if parameter does not exist
-     *
      * @return FileUpload|array|null
      */
-    public function fetch($key, $default = null)
+    public function fetch(string $key, $default = null)
     {
         return $this->bag[$key] ?? $default;
     }
@@ -66,7 +64,6 @@ class FileBag
      * Converts uploaded files to FileUpload instances.
      *
      * @param array|FileUpload $file A (multi-dimensional) array of uploaded file information
-     *
      * @return array A (multi-dimensional) array of FileUpload instances
      */
     private function convertFileInformation($file)
@@ -107,10 +104,9 @@ class FileBag
      * just returns the original array unmodified.
      *
      * @param array $data
-     *
      * @return array
      */
-    private function fixPhpFilesArray($data)
+    private function fixPhpFilesArray(array $data): array
     {
         if (!is_array($data)) {
             return $data;

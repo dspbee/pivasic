@@ -44,7 +44,7 @@ class Response
      *
      * @param string $content
      */
-    public function setContent($content)
+    public function setContent(string $content)
     {
         $this->content = $content;
     }
@@ -54,10 +54,9 @@ class Response
      *
      * @param string $name
      * @param string $value
-     *
      * @return bool
      */
-    public function header($name, $value)
+    public function header(string $name, string $value): bool
     {
         if (!empty($name) && !empty($value) && !headers_sent()) {
             header($name . ': ' . $value);
@@ -69,7 +68,7 @@ class Response
     /**
      * @return bool
      */
-    public function setContentTypeJson()
+    public function setContentTypeJson(): bool
     {
         return $this->header('Content-Type', 'application/json; charset=utf-8');
     }
@@ -77,7 +76,7 @@ class Response
     /**
      * @return bool
      */
-    public function setContentTypeXml()
+    public function setContentTypeXml(): bool
     {
         return $this->header('Content-Type', 'text/xml; charset=utf-8');
     }
@@ -85,18 +84,17 @@ class Response
     /**
      * Set response status.
      *
-     * @param integer $statusCode       - status
+     * @param int $statusCode           - status
      * @param string $version           - HTTP version
-     * @param string|null $statusText   - status text
-     *
+     * @param string $statusText   - status text
      * @return bool
      */
-    public function setStatusCode($statusCode, $version = '1.1', $statusText = null)
+    public function setStatusCode(int $statusCode, string $version = '1.1', string $statusText = ''): bool
     {
         if (!headers_sent()) {
             $statusCode = intval($statusCode);
 
-            if (null === $statusText) {
+            if ('' == $statusText) {
                 $statusTexts = [
                     100 => 'Continue',
                     101 => 'Switching Protocols',
@@ -171,13 +169,13 @@ class Response
     /**
      * Redirect to url with statusCode and terminate.
      *
-     * @param null|string $url
+     * @param string $url
      * @param int $statusCode
      */
-    public function redirect($url = null, $statusCode = 302)
+    public function redirect(string $url = '', int $statusCode = 302)
     {
         $server = filter_input_array(INPUT_SERVER);
-        if (null === $url && isset($server['REQUEST_URI'])) {
+        if ('' == $url && isset($server['REQUEST_URI'])) {
             $url = '/' . trim($server['REQUEST_URI'], '/');
             preg_match('/^[\\a-zA-Z0-9-\._~:\/\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=%]*$/iD', $url, $match);
             $url = $match[1] ?? '';

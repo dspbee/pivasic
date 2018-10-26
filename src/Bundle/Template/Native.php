@@ -14,10 +14,14 @@ class Native
 {
     /**
      * @param string $packageRoot
+     * @param string $language
+     * @param bool $cache
      */
-    public function __construct($packageRoot)
+    public function __construct(string $packageRoot, string $language = '', bool $cache = true)
     {
         $this->packageRoot = rtrim($packageRoot, '/');
+        $this->language = $language;
+        $this->cache = $cache;
         $this->isRouteView = false;
     }
 
@@ -26,17 +30,14 @@ class Native
      *
      * @param string $name
      * @param array $data
-     *
-     * @return string|null
+     * @return string
+     * @throws FileNotFoundException
+     * @throws \RuntimeException
      */
-    public function getContent($name, array $data = [])
+    public function getContent(string $name, array $data = []): string
     {
         $cacheName = $name;
-        if (false === strpos($name, '.')) {
-            if (!empty($name)) {
-                $name = '.' . $name;
-            }
-            $name = 'view' . $name . '.html.php';
+        if ('' == $name) {
             $this->isRouteView = true;
 
             $stack = debug_backtrace();
@@ -44,18 +45,16 @@ class Native
                 if (false !== stripos($item['file'], DIRECTORY_SEPARATOR . 'Route' . DIRECTORY_SEPARATOR)) {
                     $cacheName = pathinfo($item['file'], PATHINFO_DIRNAME) . '/' . $name;
                     $cacheName = explode('Route' . DIRECTORY_SEPARATOR, $cacheName)[1];
-                    $cacheName = str_replace(['/', '\\'], '_', $cacheName);
+                    $cacheName = 'route_' . str_replace(['/', '\\'], '_', $cacheName);
                     break;
                 }
             }
         }
+        $cacheName .= '_' . $this->language . '.html.php';
         $path = $this->packageRoot . '/view/_cache/' . str_replace('/', '_', $cacheName);
 
-        if (!file_exists($path)) {
-            $code = $this->compile($name, true, true);
-            if (empty($code)) {
-                return null;
-            }
+        if (!$this->cache || !file_exists($path)) {
+            $code = $this->compile($name . '/view.html.php', true, true, true);
 
             $fh = fopen($path, 'wb');
             if (flock($fh, LOCK_EX)) {
@@ -75,21 +74,20 @@ class Native
             return $html;
         }
 
-        return null;
+        throw new \RuntimeException('Can\'t render template');
     }
 
     /**
      * Create solid template.
      *
      * @param string $name
+     * @param bool $processLang
      * @param bool $processInclude
      * @param bool $processExtends
-     *
-     * @return string|null
-     *
+     * @return string
      * @throws FileNotFoundException
      */
-    private function compile($name, $processInclude, $processExtends)
+    private function compile(string $name, bool $processLang, bool $processInclude, bool $processExtends): string
     {
         if ($this->isRouteView) {
             $this->isRouteView = false;
@@ -97,12 +95,18 @@ class Native
             $stack = debug_backtrace();
             foreach ($stack as $item) {
                 if (false !== stripos($item['file'], DIRECTORY_SEPARATOR . 'Route' . DIRECTORY_SEPARATOR)) {
-                    $path = pathinfo($item['file'], PATHINFO_DIRNAME) . '/' . $name;
+                    $path = pathinfo($item['file'], PATHINFO_DIRNAME) . '/view.html.php';
+                    if ($processLang) {
+                        $storagePath = str_replace('view.html.php', '_lang/' . $this->language . '/data.php', $path);
+                    }
                     break;
                 }
             }
         } else {
             $path = $this->packageRoot . '/view/' . $name;
+            if ($processLang) {
+                $storagePath = str_replace('view.html.php', '', $path) . '_lang/' . $this->language . '/data.php';
+            }
         }
 
         if (file_exists($path)) {
@@ -113,13 +117,28 @@ class Native
             throw new FileNotFoundException($path);
         }
 
+        if ($processLang && file_exists($storagePath)) {
+            $storage = include $storagePath;
+            preg_match_all('/<!-- lang (.*) -->/', $code, $matchList);
+            if (isset($matchList[1])) {
+                foreach ($matchList[1] as $key => $index) {
+                    $name = explode('>', $index);
+                    $default = trim($name[1] ?? '');
+                    $name = trim($name[0]);
+                    if (!empty($matchList[0][$key]) && false !== strpos($code, $matchList[0][$key])) {
+                        $code = str_replace($matchList[0][$key], $storage[$name] ?? $default, $code);
+                    }
+                }
+            }
+        }
+
         if ($processInclude) {
             preg_match_all('/<!-- include (.*) -->/', $code, $matchList);
             if (isset($matchList[1])) {
                 foreach ($matchList[1] as $key => $template) {
                     if (!empty($matchList[0][$key]) && false !== strpos($code, $matchList[0][$key])) {
                         $template = trim($template);
-                        $code = str_replace($matchList[0][$key], $this->compile($template, true, false), $code);
+                        $code = str_replace($matchList[0][$key], $this->compile($template . '/view.html.php', true, true, false), $code);
                     }
                 }
             }
@@ -129,7 +148,7 @@ class Native
             preg_match_all('/<!-- extends (.*) -->/', $code, $matchList);
             if (isset($matchList[1][0])) {
                 $template = trim($matchList[1][0]);
-                $parentHtml = $this->compile($template, true, false);
+                $parentHtml = $this->compile($template . '/view.html.php', true, true, false);
 
                 $code = str_replace($matchList[0][0], '', $code);
                 $parentHtml = str_replace('<!-- section -->', $code, $parentHtml);
@@ -145,10 +164,9 @@ class Native
      *
      * @param string $__file__  File to include
      * @param array  $data      Data passed to template
-     *
      * @return string
      */
-    private static function renderTemplate($__file__, array $data)
+    private static function renderTemplate(string $__file__, array $data): string
     {
         ob_start();
         extract($data);
@@ -157,6 +175,8 @@ class Native
     }
 
     private $packageRoot;
+    private $language;
+    private $cache;
     private $isRouteView;
 }
 

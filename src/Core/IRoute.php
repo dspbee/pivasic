@@ -15,8 +15,8 @@ interface IRoute
      *
      * @param string $packageRoot
      * @param Request $request
-     *
-     * @return Response|null
+     * @return Response
+     * @throws \RuntimeException
      */
-    public function getResponse($packageRoot, Request $request);
+    public function getResponse(string $packageRoot, Request $request): Response;
 }

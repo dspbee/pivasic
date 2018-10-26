@@ -17,16 +17,16 @@ class Request
      *
      * @param array $languageList
      * @param array $packageList
-     * @param null|string $url
+     * @param string $url
      */
-    public function __construct(array $languageList = [], array $packageList = [], $url = null)
+    public function __construct(array $languageList = [], array $packageList = [], $url = '')
     {
-        if (null === $url) {
+        if ('' == $url) {
             $url = filter_input_array(INPUT_SERVER)['REQUEST_URI'] ?? '';
         }
         $this->method = 'GET';
         $this->defaultLanguage = $languageList[0] ?? '';
-        $this->language = '';
+        $this->language = $this->defaultLanguage;
         $this->package = 'Original';
         $this->route = 'index';
 
@@ -84,7 +84,7 @@ class Request
      *
      * @return string
      */
-    public function url()
+    public function url(): string
     {
         return $this->url;
     }
@@ -94,7 +94,7 @@ class Request
      *
      * @return string
      */
-    public function package()
+    public function package(): string
     {
         return $this->package;
     }
@@ -102,10 +102,16 @@ class Request
     /**
      * URL path without language code, package name and an optional query parameters.
      *
+     * @param bool $dropIndex
      * @return string
      */
-    public function route()
+    public function route(bool $dropIndex = false): string
     {
+        if ($dropIndex) {
+            if ('index' == $this->route) {
+                return '';
+            }
+        }
         return $this->route;
     }
 
@@ -114,7 +120,7 @@ class Request
      *
      * @return string
      */
-    public function method()
+    public function method(): string
     {
         return $this->method;
     }
@@ -124,7 +130,7 @@ class Request
      *
      * @return string
      */
-    public function language()
+    public function language(): string
     {
         return $this->language;
     }
@@ -134,7 +140,7 @@ class Request
      *
      * @return string
      */
-    public function defaultLanguage()
+    public function defaultLanguage(): string
     {
         return $this->defaultLanguage;
     }

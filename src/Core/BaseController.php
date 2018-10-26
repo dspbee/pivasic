@@ -4,6 +4,7 @@
  */
 namespace Pivasic\Core;
 
+use Pivasic\Bundle\Debug\Wrap;
 use Pivasic\Bundle\Template\Native;
 
 /**
@@ -18,7 +19,7 @@ class BaseController
      * @param string $packageRoot
      * @param Request $request
      */
-    public function __construct($packageRoot, Request $request)
+    public function __construct(string $packageRoot, Request $request)
     {
         $this->packageRoot = $packageRoot;
         $this->request = $request;
@@ -47,10 +48,10 @@ class BaseController
      * @param string $name
      * @param array $data
      */
-    public function setView($name = '', array $data = [])
+    public function setView(string $name = '', array $data = [])
     {
         $this->response = new Response;
-        $this->response->setContent((new Native($this->packageRoot))->getContent($name, $data));
+        $this->response->setContent((new Native($this->packageRoot, $this->request->language(), !Wrap::isEnabled()))->getContent($name, $data));
     }
 
     /**
@@ -58,7 +59,7 @@ class BaseController
      *
      * @param string $content
      */
-    public function setContent($content)
+    public function setContent(string $content)
     {
         $this->response = new Response();
         $this->response->setContent($content);
@@ -67,10 +68,10 @@ class BaseController
     /**
      * Redirect to the URL with statusCode.
      *
-     * @param null $url
+     * @param string $url
      * @param int $statusCode
      */
-    public function setRedirect($url = null, $statusCode = 303)
+    public function setRedirect(string $url = '', int $statusCode = 303)
     {
         $this->response = new Response();
         $this->response->redirect($url, $statusCode);

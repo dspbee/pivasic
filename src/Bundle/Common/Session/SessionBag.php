@@ -21,10 +21,9 @@ class SessionBag extends ValueBag
      * Get true if the SESSION parameter is defined.
      *
      * @param string $key
-     *
      * @return bool true
      */
-    public function has($key)
+    public function has(string $key): bool
     {
         return isset($_SESSION) ? array_key_exists($key, $_SESSION) : false;
     }
@@ -34,7 +33,7 @@ class SessionBag extends ValueBag
      *
      * @return array
      */
-    public function keys()
+    public function keys(): array
     {
         return isset($_SESSION) ? array_keys($_SESSION) : [];
     }
@@ -42,7 +41,6 @@ class SessionBag extends ValueBag
     /**
      * @param string $key
      * @param mixed $value
-     *
      * @throws \LogicException
      */
     public function set($key, $value)
@@ -59,20 +57,18 @@ class SessionBag extends ValueBag
      *
      * @param string $key
      * @param mixed|null $default The default value if parameter does not exist
-     *
      * @return mixed|null
      */
-    public function fetch($key, $default = null)
+    public function fetch(string $key, $default = null)
     {
         return $_SESSION[$key] ?? $default;
     }
 
     /**
      * Returns the number of values.
-     *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return isset($_SESSION) ? count($_SESSION) : 0;
     }

@@ -22,10 +22,9 @@ class ValueBag
      * Returns true if parameter is defined.
      *
      * @param string $key
-     *
      * @return bool
      */
-    public function has($key)
+    public function has(string $key): bool
     {
         return array_key_exists($key, $this->bag);
     }
@@ -35,7 +34,7 @@ class ValueBag
      *
      * @return array
      */
-    public function keys()
+    public function keys(): array
     {
         return array_keys($this->bag);
     }
@@ -45,10 +44,9 @@ class ValueBag
      *
      * @param string $key
      * @param mixed|null $default The default value if parameter does not exist
-     *
      * @return mixed|null
      */
-    public function fetch($key, $default = null)
+    public function fetch(string $key, $default = null)
     {
         $val = $this->bag[$key] ?? $default;
         if (!is_array($val)) {
@@ -63,10 +61,9 @@ class ValueBag
      *
      * @param string $key
      * @param int $default The default value if parameter does not exist
-     *
      * @return int
      */
-    public function fetchInt($key, $default = 0)
+    public function fetchInt(string $key, int $default = 0): int
     {
         return intval($this->fetch($key, $default));
     }
@@ -79,7 +76,7 @@ class ValueBag
      * @param int $precision The optional number of decimal digits to round to
      * @return float
      */
-    public function fetchFloat($key, $default = 0.0, $precision = 2)
+    public function fetchFloat(string $key, float $default = 0.0, int $precision = 2): float
     {
         return round(floatval($this->fetch($key, $default)), $precision);
     }
@@ -91,7 +88,7 @@ class ValueBag
      * @param bool|false $default The default value if parameter does not exist
      * @return mixed
      */
-    public function fetchBool($key, $default = false)
+    public function fetchBool(string $key, bool $default = false): bool
     {
         return $this->fetchFilter($key, $default, FILTER_VALIDATE_BOOLEAN);
     }
@@ -103,12 +100,10 @@ class ValueBag
      * @param mixed|null $default The default value if parameter does not exist
      * @param int $filter         FILTER_* constant
      * @param array $options      Filter options
-     *
      * @see http://php.net/manual/en/function.filter-var.php
-     *
      * @return mixed
      */
-    public function fetchFilter($key, $default = null, $filter = FILTER_DEFAULT, $options = [])
+    public function fetchFilter(string $key, $default = null, $filter = FILTER_DEFAULT, $options = [])
     {
         $value = $this->fetch($key, $default);
 
@@ -129,10 +124,9 @@ class ValueBag
      * @param string $key
      * @param callable $callback
      * @param mixed|null $default
-     *
      * @return mixed
      */
-    public function fetchCustom($key, $callback, $default = null)
+    public function fetchCustom(string $key, $callback, $default = null)
     {
         return $callback($this->fetch($key, $default));
     }
@@ -146,14 +140,13 @@ class ValueBag
      *
      * @return string
      */
-    public function fetchEscape($key, \mysqli $db, $default = '')
+    public function fetchEscape(string $key, \mysqli $db, string $default = ''): string
     {
         return $db->real_escape_string($this->fetch($key, $default));
     }
 
     /**
      * Returns the count of parameters.
-     *
      * @return int
      */
     public function count()

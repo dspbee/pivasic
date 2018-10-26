@@ -17,10 +17,10 @@ class DefaultRoute implements IRoute
      *
      * @param string $packageRoot
      * @param Request $request
-     *
-     * @return Response|null
+     * @return Response
+     * @throws \RuntimeException
      */
-    public function getResponse($packageRoot, Request $request)
+    public function getResponse(string $packageRoot, Request $request): Response
     {
         $packageRoot = rtrim($packageRoot, '/');
         $route = preg_replace('/\/\d+/u', '/D', $request->route());
@@ -34,7 +34,7 @@ class DefaultRoute implements IRoute
             if (class_exists($controllerClass)) {
                 $controller = new $controllerClass($packageRoot, $request);
             } else {
-                throw new \RuntimeException(sprintf('The class "%s" does not exist', $controllerClass));
+                throw new \RuntimeException(sprintf('Route: the class "%s" does not exist', $controllerClass));
             }
 
             /**
@@ -45,10 +45,10 @@ class DefaultRoute implements IRoute
                 $controller->$handler();
                 return $controller->getResponse();
             } else {
-                throw new \RuntimeException(sprintf('The method "%s" does not exist', $handler));
+                throw new \RuntimeException(sprintf('Route: the method "%s" does not exist', $handler));
             }
         }
 
-        return null;
+        throw new \RuntimeException(sprintf('Route: path "%s" does not exist', $path));
     }
 }

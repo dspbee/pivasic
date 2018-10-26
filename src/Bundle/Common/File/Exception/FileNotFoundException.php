@@ -13,7 +13,7 @@ class FileNotFoundException extends FileException
     /**
      * @param string $path Path to the file that was not found
      */
-    public function __construct($path)
+    public function __construct(string $path)
     {
         parent::__construct(sprintf('File "%s" does not exist', $path));
     }

@@ -26,7 +26,6 @@ class Session
 
     /**
      * @return bool
-     *
      * @throws \RuntimeException
      */
     public function start()
@@ -57,7 +56,7 @@ class Session
      * @param null $lifetime
      * @return bool
      */
-    public function regenerate($destroy = false, $lifetime = null)
+    public function regenerate(bool $destroy = false, $lifetime = null): bool
     {
         if (\PHP_SESSION_ACTIVE !== session_status()) {
             return false;
@@ -88,7 +87,7 @@ class Session
      *
      * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return session_id();
     }
@@ -97,10 +96,9 @@ class Session
      * Sets the session ID.
      *
      * @param string $id
-     *
      * @throws \LogicException
      */
-    public function setId($id)
+    public function setId(string $id)
     {
         if (null === $this->session) {
             throw new \LogicException('Cannot change the ID of an active session');
@@ -111,10 +109,9 @@ class Session
 
     /**
      * Gets the session name.
-     *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return session_name();
     }
@@ -123,10 +120,9 @@ class Session
      * Sets the session name.
      *
      * @param string $name
-     *
      * @throws \LogicException
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         if (null === $this->session) {
             throw new \LogicException('Cannot change the name of an active session');

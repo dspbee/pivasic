@@ -26,7 +26,7 @@ class Wrap
     /**
      * @param string $path
      */
-    public static function setPackageRoot($path)
+    public static function setPackageRoot(string $path)
     {
         self::$packageRoot = $path;
     }
@@ -37,8 +37,8 @@ class Wrap
     public static function register()
     {
         self::$debugEnabled = true;
-        set_error_handler('Dspbee\Bundle\Debug\Wrap::render');
-        register_shutdown_function(['Dspbee\Bundle\Debug\Wrap', 'handleFatal']);
+        set_error_handler('Pivasic\Bundle\Debug\Wrap::render');
+        register_shutdown_function(['Pivasic\Bundle\Debug\Wrap', 'handleFatal']);
     }
 
     /**
@@ -70,9 +70,9 @@ class Wrap
      * @param string $file
      * @param string $line
      * @param null $context
-     * @param array|null $backtrace
+     * @param array $backtrace
      */
-    public static function render($code, $message, $file, $line, $context = null, array $backtrace = [])
+    public static function render(string $code, string $message, string $file, string $line, $context = null, array $backtrace = [])
     {
         if (ob_get_length()) {
             ob_clean();
@@ -103,11 +103,12 @@ class Wrap
             }
         }
 
-        $template = new Native(self::$packageRoot);
+        $template = new Native(self::$packageRoot, '', false);
         $response = new Response();
         $response->setStatusCode(418);
-        $response->setContent($template->getContent('catch.html.php', $data));
+        $response->setContent($template->getContent('catch', $data));
         $response->send();
+        print_r($data);
         exit;
     }
 

@@ -41,7 +41,7 @@ class FileTest extends TestCase
         $this->assertEquals('gif', $file->guessExtension());
 
         $file = new File($this->root . '/other-file.example');
-        $this->assertNull($file->guessExtension());
+        $this->assertEmpty($file->guessExtension());
 
         $file = new File($this->root . '/.unknownextension');
         $this->assertEquals('bin', $file->guessExtension());

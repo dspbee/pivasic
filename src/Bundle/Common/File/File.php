@@ -20,7 +20,7 @@ class File extends \SplFileInfo
      * @param bool   $checkPath Whether to check the path or not
      * @throws FileNotFoundException
      */
-    public function __construct($path, $checkPath = true)
+    public function __construct(string $path, bool $checkPath = true)
     {
         if ($checkPath && !is_file($path)) {
             throw new FileNotFoundException($path);
@@ -30,17 +30,17 @@ class File extends \SplFileInfo
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function guessExtension()
+    public function guessExtension(): string
     {
         return Extension::getInstance()->guess($this->guessMimeType());
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function guessMimeType()
+    public function guessMimeType(): string
     {
         return MimeType::getInstance()->guess($this->getPathname());
     }
@@ -49,13 +49,11 @@ class File extends \SplFileInfo
      * Moves the file to a new location.
      *
      * @param string $directory   Destination folder
-     * @param string|null $name   New file name
-     *
+     * @param string $name   New file name
      * @return File
-     *
      * @throws FileException
      */
-    public function move($directory, $name = null)
+    public function move(string $directory, string $name = ''): File
     {
         $target = $this->getTargetFile($directory, $name);
 
@@ -64,20 +62,18 @@ class File extends \SplFileInfo
             throw new FileException(sprintf('Could not rename the file "%s" (%s)', $this->getPathname(), strip_tags($error['message'])));
         }
 
-       $this->customChmod($target);
+        $this->customChmod($target);
 
         return $target;
     }
 
     /**
-     * @param $directory
-     * @param string|null $name
-     *
+     * @param string $directory
+     * @param string $name
      * @return File
-     *
      * @throws FileException
      */
-    protected function getTargetFile($directory, $name = null)
+    protected function getTargetFile(string $directory, string $name = ''): File
     {
         if (!is_dir($directory)) {
             if (false === @mkdir($directory, 0777, true) && !is_dir($directory)) {
@@ -87,7 +83,7 @@ class File extends \SplFileInfo
             throw new FileException(sprintf('Unable to write in the "%s" directory', $directory));
         }
 
-        $target = rtrim($directory, '/\\') . DIRECTORY_SEPARATOR . (null === $name ? $this->getBasename() : $this->getName($name));
+        $target = rtrim($directory, '/\\') . DIRECTORY_SEPARATOR . ('' == $name ? $this->getBasename() : $this->getName($name));
 
         return new self($target, false);
     }
@@ -97,10 +93,9 @@ class File extends \SplFileInfo
      *
      * @param $target
      * @param $mode
-     *
      * @throws FileException
      */
-    protected function customChmod($target, $mode = 0666)
+    protected function customChmod(string $target, $mode = 0666)
     {
         if (false === @chmod($target, $mode & ~umask())) {
             throw new FileException(sprintf('Unable to change mode of the "%s"', $target));
@@ -111,10 +106,9 @@ class File extends \SplFileInfo
      * Returns locale independent base name of the given path.
      *
      * @param string $name The new file name
-     *
      * @return string containing
      */
-    protected function getName($name)
+    protected function getName(string $name): string
     {
         $originalName = str_replace('\\', '/', $name);
         $pos = strrpos($originalName, '/');

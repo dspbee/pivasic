@@ -23,13 +23,11 @@ class FileInfoMimeType
 
     /**
      * @param $path
-     *
-     * @return string|null
-     *
+     * @return string
      * @throws FileNotFoundException
      * @throws AccessDeniedException
      */
-    public function guess($path)
+    public function guess(string $path): string
     {
         if (!is_file($path)) {
             throw new FileNotFoundException($path);
@@ -40,11 +38,11 @@ class FileInfoMimeType
         }
 
         if (!self::isSupported()) {
-            return null;
+            return '';
         }
 
         if (!$fileInfo = new \finfo(FILEINFO_MIME_TYPE)) {
-            return null;
+            return '';
         }
 
         return $fileInfo->file($path);

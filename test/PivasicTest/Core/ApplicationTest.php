@@ -9,6 +9,10 @@ class ApplicationTest extends TestCase
     public function testApp()
     {
         $app = new Application('');
-        $this->assertInstanceOf('Pivasic\Core\Response', $app->getResponse([], [], []));
+        try {
+            $this->assertInstanceOf('Pivasic\Core\Response', $app->getResponse([], [], []));
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('\RuntimeException', $e);
+        }
     }
 }

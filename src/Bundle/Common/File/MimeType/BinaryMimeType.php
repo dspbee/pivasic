@@ -16,20 +16,18 @@ class BinaryMimeType
     /**
      * @return bool
      */
-    public static function isSupported()
+    public static function isSupported(): bool
     {
         return '\\' !== DIRECTORY_SEPARATOR && function_exists('passthru') && function_exists('escapeshellarg');
     }
 
     /**
      * @param $path
-     *
-     * @return string|null
-     *
+     * @return string
      * @throws FileNotFoundException
      * @throws AccessDeniedException
      */
-    public function guess($path)
+    public function guess(string $path): string
     {
         if (!is_file($path)) {
             throw new FileNotFoundException($path);
@@ -40,7 +38,7 @@ class BinaryMimeType
         }
 
         if (!self::isSupported()) {
-            return null;
+            return '';
         }
 
         $return = 1;
@@ -48,12 +46,12 @@ class BinaryMimeType
         passthru(sprintf('file -b --mime %s 2>/dev/null', escapeshellarg($path)), $return);
         if ($return > 0) {
             ob_end_clean();
-            return null;
+            return '';
         }
 
         $type = trim(ob_get_clean());
         if (!preg_match('#^([a-z0-9\-]+/[a-z0-9\-\.]+)#i', $type, $match)) {
-            return null;
+            return '';
         }
 
         return $match[1];
