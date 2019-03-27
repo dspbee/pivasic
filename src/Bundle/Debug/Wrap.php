@@ -59,7 +59,7 @@ class Wrap
      */
     public static function handleException(\Throwable $e)
     {
-        self::render($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), null, $e->getTrace());
+        self::render($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), null, $e->getTrace(), get_class($e));
     }
 
     /**
@@ -71,14 +71,15 @@ class Wrap
      * @param string $line
      * @param null $context
      * @param array $backtrace
+     * @param string $className
      */
-    public static function render(string $code, string $message, string $file, string $line, $context = null, array $backtrace = [])
+    public static function render(string $code, string $message, string $file, string $line, $context = null, array $backtrace = [], string $className = '')
     {
         if (ob_get_length()) {
             ob_clean();
         }
         $data = [
-            'message' => $message,
+            'message' => 'From ' . $className . ' ' . $message,
             'code' => $code,
             'file' => $file,
             'line' => $line,
@@ -104,9 +105,10 @@ class Wrap
         }
 
         $template = new Native(self::$packageRoot, '', false);
+        $content = $template->getContent('catch', $data);
         $response = new Response();
         $response->setStatusCode(418);
-        $response->setContent($template->getContent('catch', $data));
+        $response->setContent($content);
         $response->send();
         print_r($data);
         exit;

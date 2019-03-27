@@ -23,6 +23,7 @@ class Native
         $this->language = $language;
         $this->cache = $cache;
         $this->isRouteView = false;
+        $this->title = '';
     }
 
     /**
@@ -53,11 +54,19 @@ class Native
         $cacheName .= '_' . $this->language . '.html.php';
         $path = $this->packageRoot . '/view/_cache/' . str_replace('/', '_', $cacheName);
 
-        if (!$this->cache || !file_exists($path)) {
+        $exist = file_exists($path);
+        if (!$this->cache || !$exist) {
             $code = $this->compile($name . '/view.html.php', true, true, true);
 
-            $fh = fopen($path, 'wb');
+            $code = preg_replace(['/\>[^\S ]+/s', '/[^\S ]+\</s', '/(\s)+/s'], ['>', '<', '\\1'], $code);
+
+            if ($exist) {
+                $fh = fopen($path, 'r+b');
+            } else {
+                $fh = fopen($path, 'wb');
+            }
             if (flock($fh, LOCK_EX)) {
+                ftruncate($fh, 0);
                 fwrite($fh, $code);
                 flock($fh, LOCK_UN);
             }
@@ -97,7 +106,7 @@ class Native
                 if (false !== stripos($item['file'], DIRECTORY_SEPARATOR . 'Route' . DIRECTORY_SEPARATOR)) {
                     $path = pathinfo($item['file'], PATHINFO_DIRNAME) . '/view.html.php';
                     if ($processLang) {
-                        $storagePath = str_replace('view.html.php', '_lang/' . $this->language . '/data.php', $path);
+                        $storagePath = str_replace('view.html.php', '_lang/' . $this->language . '.php', $path);
                     }
                     break;
                 }
@@ -105,7 +114,7 @@ class Native
         } else {
             $path = $this->packageRoot . '/view/' . $name;
             if ($processLang) {
-                $storagePath = str_replace('view.html.php', '', $path) . '_lang/' . $this->language . '/data.php';
+                $storagePath = str_replace('view.html.php', '', $path) . '_lang/' . $this->language . '.php';
             }
         }
 
@@ -119,6 +128,9 @@ class Native
 
         if ($processLang && file_exists($storagePath)) {
             $storage = include $storagePath;
+            if ('' == $this->title) {
+                $this->title = $storage['title'] ?? '';
+            }
             preg_match_all('/<!-- lang (.*) -->/', $code, $matchList);
             if (isset($matchList[1])) {
                 foreach ($matchList[1] as $key => $index) {
@@ -127,6 +139,18 @@ class Native
                     $name = trim($name[0]);
                     if (!empty($matchList[0][$key]) && false !== strpos($code, $matchList[0][$key])) {
                         $code = str_replace($matchList[0][$key], $storage[$name] ?? $default, $code);
+                    }
+                }
+            }
+        } else {
+            preg_match_all('/<!-- lang (.*) -->/', $code, $matchList);
+            if (isset($matchList[1])) {
+                foreach ($matchList[1] as $key => $index) {
+                    $name = explode('>', $index);
+                    $default = trim($name[1] ?? '');
+                    $name = trim($name[0]);
+                    if (!empty($matchList[0][$key]) && false !== strpos($code, $matchList[0][$key])) {
+                        $code = str_replace($matchList[0][$key], $this->$name ?? $default, $code);
                     }
                 }
             }
@@ -178,5 +202,6 @@ class Native
     private $language;
     private $cache;
     private $isRouteView;
-}
 
+    private $title;
+}

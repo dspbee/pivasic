@@ -4,7 +4,9 @@
  */
 namespace Pivasic\Core;
 
+use Pivasic\Bundle\Debug\Wrap;
 use Pivasic\Bundle\Template\Native;
+use Pivasic\Core\Exception\RouteException;
 
 /**
  * Initialize autoload.
@@ -26,11 +28,11 @@ class Application
         $this->packageRoot = $appRoot;
 
         /**
-         * Register autoload to app/$package/src dir's.
+         * Register autoload to app/package/$package/src dir's.
          */
         spl_autoload_register(function ($path) use ($appRoot) {
             $path = explode('\\', $path);
-            array_shift($path);                           // Vendor
+            array_shift($path);                                        // Vendor
             $package = $appRoot . 'package/' . array_shift($path);     // Package
             $path = $package . '/src/' . implode('/', $path) . '.php';
             if (file_exists($path)) {
@@ -48,6 +50,7 @@ class Application
      * @param string $url
      *
      * @return Response
+     * @throws RouteException
      */
     public function getResponse(array $packageList, array $languageList, array $customRouteList, string $url = ''): Response
     {
@@ -55,57 +58,64 @@ class Application
 
         $this->packageRoot .= 'package/' . $request->package() . '/';
 
-        /**
-         * Process request.
-         */
-        if (isset($customRouteList[$request->package()])) {
+        try {
             /**
-             * Custom routing.
+             * Process request.
              */
-            /**
-             * Path to router class.
-             */
-            $path = $this->packageRoot . 'CustomRoute.php';
-            if (file_exists($path)) {
-                require $path;
+            if (isset($customRouteList[$request->package()])) {
                 /**
-                 * Name of router class.
+                 * Path to custom router class.
                  */
-                $route = $request->package() . '\\CustomRoute';
-                /**
-                 * @var IRoute $route
-                 */
-                $route = new $route();
-                $response = $route->getResponse($this->packageRoot, $request);
-                if (null !== $response) {
-                    return $response;
+                $path = $this->packageRoot . 'CustomRoute.php';
+                if (file_exists($path)) {
+                    require $path;
+                    $route = $request->package() . '\\CustomRoute';
+                    /**
+                     * @var IRoute $route
+                     */
+                    $route = new $route();
+                    $this->response = $route->getResponse($this->packageRoot, $request);
+                    if ($this->response->is404()) {
+                        $this->set404();
+                    }
+                    return $this->response;
+                } else {
+                    throw new RouteException(sprintf('The file "%s" does not exist', $path));
                 }
             } else {
-                throw new \RuntimeException(sprintf('The file "%s" does not exist', $path));
+                $this->response = (new DefaultRoute())->getResponse($this->packageRoot, $request);
+                if ($this->response->is404()) {
+                    $this->set404();
+                }
+                return $this->response;
+            }
+        } catch (RouteException $e) {
+            if (Wrap::isEnabled()) {
+                throw $e;
+            } else {
+                $this->response = new Response();
+                $this->set404();
+                return $this->response;
             }
         }
+    }
 
-        $response = (new DefaultRoute())->getResponse($this->packageRoot, $request);
-        if (null !== $response) {
-            return $response;
-        }
-
-
-        /**
-         * If not found.
-         */
-        $response = new Response();
-        $response->setStatusCode(404);
-
+    /**
+     * Set 404 code and content.
+     */
+    private function set404()
+    {
+        $this->response->setStatusCode(404);
         $content = '404 Not Found';
         if (file_exists($this->packageRoot . '/view/404.html.php')) {
             $content = (new Native($this->packageRoot))->getContent('404.html.php');
         }
-
-        $response->setContent($content);
-
-        return $response;
+        $this->response->setContent($content);
     }
 
     private $packageRoot;
+    /**
+     * @var Response
+     */
+    private $response;
 }

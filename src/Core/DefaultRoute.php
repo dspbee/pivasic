@@ -4,6 +4,8 @@
  */
 namespace Pivasic\Core;
 
+use Pivasic\Core\Exception\RouteException;
+
 /**
  * Base routing.
  *
@@ -18,9 +20,9 @@ class DefaultRoute implements IRoute
      * @param string $packageRoot
      * @param Request $request
      * @return Response
-     * @throws \RuntimeException
+     * @throws RouteException
      */
-    public function getResponse(string $packageRoot, Request $request): Response
+    public function getResponse(string &$packageRoot, Request &$request): Response
     {
         $packageRoot = rtrim($packageRoot, '/');
         $route = preg_replace('/\/\d+/u', '/D', $request->route());
@@ -34,7 +36,7 @@ class DefaultRoute implements IRoute
             if (class_exists($controllerClass)) {
                 $controller = new $controllerClass($packageRoot, $request);
             } else {
-                throw new \RuntimeException(sprintf('Route: the class "%s" does not exist', $controllerClass));
+                throw new RouteException(sprintf('Route: the class "%s" does not exist', $controllerClass));
             }
 
             /**
@@ -42,13 +44,13 @@ class DefaultRoute implements IRoute
              */
             $handler = filter_input_array(INPUT_POST)['handler'] ?? filter_input_array(INPUT_GET)['handler'] ?? 'index';
             if (method_exists($controllerClass, $handler)) {
-                $controller->$handler();
+                $controller->invoke($handler);
                 return $controller->getResponse();
             } else {
-                throw new \RuntimeException(sprintf('Route: the method "%s" does not exist', $handler));
+                throw new RouteException(sprintf('Route: the method "%s" does not exist', $handler));
             }
+        } else {
+            throw new RouteException(sprintf('Route: path "%s" does not exist', $request->package() . '/Route/' . $route . '/' . $request->method() . '.php'));
         }
-
-        throw new \RuntimeException(sprintf('Route: path "%s" does not exist', $path));
     }
 }

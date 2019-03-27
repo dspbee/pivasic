@@ -16,7 +16,7 @@ interface IRoute
      * @param string $packageRoot
      * @param Request $request
      * @return Response
-     * @throws \RuntimeException
+     * @throws \Pivasic\Core\Exception\RouteException
      */
-    public function getResponse(string $packageRoot, Request $request): Response;
+    public function getResponse(string &$packageRoot, Request &$request): Response;
 }

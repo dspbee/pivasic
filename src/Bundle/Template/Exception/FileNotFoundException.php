@@ -15,6 +15,8 @@ class FileNotFoundException extends \RuntimeException
      */
     public function __construct(string $path)
     {
+        $path = explode('package', $path);
+        $path = $path[1] ?? '';
         parent::__construct(sprintf('The file "%s" does not exist', $path));
     }
 }

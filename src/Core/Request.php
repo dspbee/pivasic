@@ -19,7 +19,7 @@ class Request
      * @param array $packageList
      * @param string $url
      */
-    public function __construct(array $languageList = [], array $packageList = [], $url = '')
+    public function __construct(array &$languageList = [], array &$packageList = [], &$url = '')
     {
         if ('' == $url) {
             $url = filter_input_array(INPUT_SERVER)['REQUEST_URI'] ?? '';
@@ -126,7 +126,7 @@ class Request
     }
 
     /**
-     * A language code.
+     * Current language code.
      *
      * @return string
      */
@@ -136,7 +136,7 @@ class Request
     }
 
     /**
-     * A default language code.
+     * Default language code.
      *
      * @return string
      */

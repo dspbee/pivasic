@@ -12,9 +12,22 @@ namespace Pivasic\Core;
  */
 class Response
 {
+    /**
+     * Response constructor.
+     */
     public function __construct()
     {
         $this->content = '';
+        $this->is404 = true;
+    }
+
+    /**
+     * False if response body was set.
+     * @return bool
+     */
+    public function is404(): bool
+    {
+        return $this->is404;
     }
 
     /**
@@ -46,6 +59,7 @@ class Response
      */
     public function setContent(string $content)
     {
+        $this->is404 = false;
         $this->content = $content;
     }
 
@@ -174,6 +188,7 @@ class Response
      */
     public function redirect(string $url = '', int $statusCode = 302)
     {
+        $this->is404 = false;
         $server = filter_input_array(INPUT_SERVER);
         if ('' == $url && isset($server['REQUEST_URI'])) {
             $url = '/' . trim($server['REQUEST_URI'], '/');
@@ -201,4 +216,5 @@ class Response
     }
 
     private $content;
+    private $is404;
 }
